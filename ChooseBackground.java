@@ -56,7 +56,7 @@ public class ChooseBackground extends JFrame implements ActionListener {
         //pinta una imagen de fondo en esta ventana para elegir el fondo del juego
         //aquin se utiliza las imagenes que fueron cargadas en la clase
         //Estapantalla
-        gr.drawImage(getToolkit().getImage(k.rutaImagen[count]), 110, 40, 110, 100, this);
+        gr.drawImage(this.getToolkit().getImage(k.rutaImagen[count]), 110, 40, 110, 100, this);
     }
 
 }

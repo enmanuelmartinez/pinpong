@@ -23,7 +23,7 @@ public class Bola extends JComponent {
     final int diambola = 35;
     final static int ANCHO = 600;
     final static int ALTO = 350;
-    private final String dir = Datos.Ruta() + "imagenes" + File.separator;// direccion
+    private final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/imagenes" + File.separator;// direccion
     static int x, y;
     static int vx, vy;
     int delta_t, aun = 0;
@@ -33,11 +33,13 @@ public class Bola extends JComponent {
     public static boolean mandame = false;//variable que habilita la enviada de bola por red
     BufferedImage bolas[];
     //rutas de las imagenes de las pelotas
-    final String rutabolas[] = {dir + "pelota0.gif", dir + "pelota1.gif",
-            dir + "pelota2.gif", dir + "pelota3.gif", dir + "pelota4.gif",
-            dir + "pelota5.gif", dir + "pelota6.gif", dir + "pelota7.gif",
-            dir + "pelota8.gif", dir + "pelota9.gif", dir + "pelota10.gif",
-            dir + "pelota11.gif"};
+    final String rutabolas[] = {
+        dir + "baseball_ball.png", dir + "baseball_ball.png",
+        dir + "pelota2.gif", dir + "baseball_ball.png", dir + "pelota4.gif",
+        dir + "pelota5.gif", dir + "pelota6.gif", dir + "pelota7.gif",
+        dir + "pelota8.gif", dir + "pelota9.gif", dir + "pelota10.gif",
+        dir + "pelota11.gif"
+    };
 
     // constructor de la clase Bola
 

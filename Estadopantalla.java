@@ -5,11 +5,11 @@ import javax.imageio.*;
 
 public class Estadopantalla {
 
-	private final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/imagenes/" + "imagenes" + File.separator;
+	public final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/imagenes" + File.separator;
 	final String rutaImagen[] = { dir + "inicio.jpg", dir + "mario.jpg",
 			dir + "mario.jpg", dir + "mario.jpg", dir + "mario.jpg",
-			dir + "mario.jpg", dir + "mario.jpg", dir + "fondo7.jpg",
-			dir + "fondo8.gif" };
+			dir + "mario.jpg", dir + "mario.jpg", dir + "mario.jpg",
+			dir + "mario.gif" };
 	private BufferedImage pantalla[];
 	// Estados del juego
 	public boolean pantallaPrincipal;

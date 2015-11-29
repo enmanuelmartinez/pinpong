@@ -130,8 +130,7 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
                 frame.setVisible(true);
                 frame.setResizable(false);
                 System.out.println(Datos.Ruta() + "KLK");
-                Path workingDirectory = Paths.get(".").toAbsolutePath();
-                System.out.println(workingDirectory);
+                System.out.println(estadopantalla.dir);
                 break;
             case 1://caso para seleccionar fondo
                 JFrame frame2 = new ChooseBackground();
