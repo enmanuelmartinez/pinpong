@@ -5,7 +5,7 @@ import javax.imageio.*;
 
 public class Estadopantalla {
 
-	public final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/imagenes" + File.separator;
+	public final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/resources/images" + File.separator;
 	final String rutaImagen[] = { dir + "inicio.jpg", dir + "mario.jpg",
 			dir + "mario.jpg", dir + "mario.jpg", dir + "mario.jpg",
 			dir + "mario.jpg", dir + "mario.jpg", dir + "mario.jpg",

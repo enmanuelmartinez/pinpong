@@ -14,69 +14,48 @@ import javax.swing.*;
 public class Ball extends JComponent {
 
     Main main1;
-    private ChooseBall ge;
+    private BallSelector ge;
     private Score puntajes;
-    private barras bar;
+    private ScrollBar bar;
 
     private BufferedImage image;
 
     final int diambola = 35;
     final static int ANCHO = 600;
     final static int ALTO = 350;
-    private final String dir = "/home/enmanuel/Desktop/PROYECTO2006-1909/PROYECTO2006-1909/pinpong/imagenes" + File.separator;// direccion
     static int x, y;
     static int vx, vy;
     int delta_t, aun = 0;
-    int posita1, posita2;
     static boolean flagball;
     static int chosebola = 0;
     public static boolean mandame = false;//variable que habilita la enviada de bola por red
-    BufferedImage bolas[];
 
-    //rutas de las imagenes de las pelotas
-    final String rutabolas[] = {
-        dir + "baseball_ball.png", dir + "baseball_ball.png",
-        dir + "pelota2.gif", dir + "baseball_ball.png", dir + "pelota4.gif",
-        dir + "pelota5.gif", dir + "pelota6.gif", dir + "pelota7.gif",
-        dir + "pelota8.gif", dir + "pelota9.gif", dir + "pelota10.gif",
-        dir + "pelota11.gif"
+    public static final String rutabolas[] = {
+        Resource.Image.BASEBALL_BALL
     };
 
-
-    public Ball() {
+    public Ball(String ballImageResource) {
 
         delta_t = 4;//factor que multiplica el desplazamiento de la bola
         flagball = true;// habilita el pintado y el desplazamiento de la bola
         x = 64;//posicion inicial
         y = 150;//posicion inicial
-        bolas = new BufferedImage[rutabolas.length];
         vx = 1;// define velocidad en x
         vy = 1;//define velocidad en y
-        //obtiene las imagenes de las bolas
-        for (int n = 0; n < rutabolas.length; n++) {
-            bolas[n] = this.getImagen(n);
+        try {
+            this.image = ImageIO.read(new File(ballImageResource));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    }
-
-    public void Correrbola(final Graphics2D g2) {
-
-        if (flagball)// aqui se controla movimiento de bola pintado y cambio de posicion
-        {
-            accion(delta_t);//cambia de posicion la bola y hace comparaciones de limite
-            repinta(g2);//la pinta en pantalla
-        }
     }
 
     public void run(){
-        if (flagball)// aqui se controla movimiento de bola pintado y cambio de posicion
-        {
-            accion(delta_t);//cambia de posicion la bola y hace comparaciones de limite
-        }
+        accion(delta_t);//cambia de posicion la bola y hace comparaciones de limite
     }
 
     public void draw(final Graphics2D g2) {
-        g2.drawImage(bolas[chosebola], Math.round(x), Math.round(y), null);
+        g2.drawImage(this.image, Math.round(x), Math.round(y), null);
     }
 
     // Metodo que cambia de posicion la bola
@@ -88,58 +67,30 @@ public class Ball extends JComponent {
             vy = -vy;
         }
 
-        if (Main.modo1juego) {// Si se esta en modo de juego uno
-
-            if ((vx < 0 && x >= 5 && x <= 50)
-                    && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
-                vx = -vx;
-                aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
-                delta_t = aun;
-            }// si pega tabla uno
-            if ((vx > 0 && x >= ANCHO - 100 && x <= ANCHO - 80)
-                    && (y >= bar.desplaza2 - 25 && y <= 100 + bar.desplaza2)) {
-                vx = -vx;
-                aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
-                delta_t = aun;
-            }// si pega tabla2
-            if (vx < 0 && x <= -diambola - 14) {
-                puntajes.puntosjugador2++;
-                bolaposi();
-            }// si se le anota a player1
-            if (vx > 0 && x >= ANCHO + diambola) {
-                puntajes.puntosjugador1++;
-                bolaposi();
-            }// si se le anota a player2
-
-        }
-
-        if (Main.modo2juego)// Si se esta en modo de juego dos
-        {
-
-            if (vx > 0 && x + diambola >= ANCHO + 130) {
-                flagball = false;
-                mandame = true;
-            }// se detiene el cambio de posicion y repintado
-            // y se procede a dar paso a la condicion de mandar los datos por
-            // Socket
-            if ((vx < 0 && x >= 5 && x <= 50)
-                    && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
-                vx = -vx;
-            }// si choca en paleta uno
-            if (vx < 0 && x <= -diambola - 14) {
-                puntajes.puntosjugador2++;
-                bolaposi();
-            }// si se le anota a player1
+        if ((vx < 0 && x >= 5 && x <= 50) && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
+            vx = -vx;
+            aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
+            delta_t = aun;
+        }// si pega tabla uno
+        if ((vx > 0 && x >= ANCHO - 100 && x <= ANCHO - 80) && (y >= bar.desplaza2 - 25 && y <= 100 + bar.desplaza2)) {
+            vx = -vx;
+            aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
+            delta_t = aun;
+        }// si pega tabla2
+        if (vx < 0 && x <= -diambola - 14) {
+            puntajes.puntosjugador2 ++;
+            bolaposi();
+        }// si se le anota a player1
+        if (vx > 0 && x >= ANCHO + diambola) {
+            puntajes.puntosjugador1++;
+            bolaposi();
         }
 
     }
 
-    // Metodo que posiciona la bola en el centro de la pantalla y le da un
-    // direccion aleatoria
     public void bolaposi() {
 
         try {
-
             Thread.sleep(1200);
         } catch (final Exception s) {
         }
@@ -154,16 +105,6 @@ public class Ball extends JComponent {
 
     }
 
-    // Este metodo obtiene una imagen en la ruta especificada y la almacena en
-    // memoria
-    private BufferedImage getImagen(int n) {
-        try {
-            return ImageIO.read(new File(rutabolas[n]));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public int aleat()// Da un numero aleatorio de 0-12
     {
         int num = 0;
@@ -171,11 +112,4 @@ public class Ball extends JComponent {
         return num;
     }
 
-    // Este metodo pinta la imagen de la bola con la variable graphics que se le
-    // fue pasada
-    public void repinta(final Graphics2D g2) {
-
-        g2.drawImage(bolas[chosebola], Math.round(x), Math.round(y), null);
-
-    }
 }

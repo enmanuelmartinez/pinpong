@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-//package game;
-
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Color;
 
 
 /*-------------------------------------------------
@@ -17,7 +12,6 @@ import java.awt.*;
 //clase que maneja los puntajes de los jugadores
 
 public class Score {
-    Main main1;
     public static int puntosjugador1;
     public static int puntosjugador2;
 
@@ -34,7 +28,7 @@ public class Score {
         g2.setColor(Color.ORANGE);
         g2.drawString("JUGADOR#1=" + puntosjugador1 + "", 12, Main.ALTO - 12);
         // //pinta tiempo en la parte superior de pantalla pero en el centro de esta
-        g2.drawString(Tiempo.time, Main.ANCHO / 2, 20);
+        g2.drawString(Clock.time, Main.ANCHO / 2, 20);
 
     }
 

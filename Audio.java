@@ -1,6 +1,10 @@
-
-import javax.sound.midi.*;
-import java.io.*;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.InvalidMidiDataException;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author ENMANUEL MARTINEZ GONZALEZ, ITT ,
@@ -16,26 +20,21 @@ public class Audio {
 
     }
 
-    //metodo que le mandas una direcion de un midi y lo reproduce
     public void reproduce(String direccion) {
         try {
             File audioFile = new File(direccion);
-            @SuppressWarnings("unused")
-            MidiFileFormat mff2 = MidiSystem.getMidiFileFormat(audioFile);//se obtiene el formato de archivo
-            Sequence Senc = MidiSystem.getSequence(audioFile);//se le pasa la secuencia
-
-            secuencer = MidiSystem.getSequencer();//se obtiene la secuencia de midi del sistema
-            secuencer.open();//se abre secuencia
-            secuencer.setSequence(Senc);//se le asigan
-            secuencer.setLoopCount(50);//se le asigna un ciclo de reproduccion de 50 veces ,cuando termina vuelv
-            secuencer.start();//inicia reproduccion
+            Sequence Senc = MidiSystem.getSequence(audioFile);
+            secuencer = MidiSystem.getSequencer();
+            secuencer.open();
+            secuencer.setSequence(Senc);
+            secuencer.setLoopCount(50);
+            secuencer.start();
         } catch (MidiUnavailableException ecc) {
         } catch (InvalidMidiDataException ecc2) {
         } catch (IOException ecc3) {
         }
     }
 
-    //metodo que para la cansion
     public void stop() {
         secuencer.stop();
     }

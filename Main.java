@@ -1,11 +1,12 @@
 import java.awt.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 import java.awt.Image;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 /*-------------------------------------------------
  *
@@ -17,29 +18,26 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
     private static final long serialVersionUID = 1L;
     private Audio audio;
-    Cliente cliente;
-    Ball ball;
-    barras Barra;
-    Estadopantalla estadopantalla;
-    Resource datos;
-    Score puntajes;
+    private Ball ball = null;
+    private ScrollBar Barra;
+    private Score puntajes;
+    private Clock clock;
+    private BufferedImage backgroundImage;
 
     //declaracion de variables de control
     public static final int ANCHO = 600;
     public static final int ALTO = 350;
     private boolean estaFull = false;
     public static boolean modo1juego = false, modo2juego = false, inicio = false;
-    boolean flag = true, estado = true;
-    static GraphicsDevice grafica = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    static Thread hilomain;
-    static Thread copiahilomain;
+    static GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    private Thread hilomain;
 
     //declaracion de menus, items
-    private String Itemnames[] = {"Inicio", "Recor", "Records", "Exit"};
-    private String Menunames[] = {"OPCIONES", "CREDITS", "HELP"};
+    private String Itemnames[] = {"Start", "Recor", "Records", "Exit"};
+    private String Menunames[] = {"MAIN", "CREDITS", "HELP"};
     private JMenuItem MenuItems[] = new JMenuItem[Itemnames.length];
     private JMenu Menus[] = new JMenu[Menunames.length];
-    private JMenuBar herramientasbar = new JMenuBar();
+    private JMenuBar herramientasbar;
     JRadioButtonMenuItem[] settingItems = {
         new JRadioButtonMenuItem("Ball type"),
         new JRadioButtonMenuItem("BgdImage"),
@@ -47,25 +45,41 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     };
     JMenu setting = new JMenu("Settings");
     ButtonGroup gruposetting;
-
-    Graphics dg;
-    JLabel letrero;
     Container con;
-    Thread hilotiempo;
-    Thread hilocliente2;
+
+    public enum ScreenState {
+        STARTSCREEN , ONGAME, PAUSED;
+    }
+
+    private ScreenState screenState;
 
     public Main() {
         super("$----------JUEGO ENMANUEL PINPONG cliente$");
-        estadopantalla = new Estadopantalla();//inicializacion de clase Estadopantalla
-        ball = new Ball();//inicializacion de clase Bola
-        Barra = new barras();////inicializacion de clase barras
-        puntajes = new Score();////inicializacion de clase puntajes
-        this.setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
-        this.setResizable(false);//deshabilita cambiar de tamano a la ventana
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//activa el cerrado correcto de la ventana
+        screenState = ScreenState.STARTSCREEN;
+        Barra = new ScrollBar();
+        puntajes = new Score();
+        try {
+            backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.initComponents();
         con = getContentPane();//se obtiene el contenedor del JFrame
-        setJMenuBar(herramientasbar);
+        setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
+        setResizable(false);//deshabilita cambiar de tamano a la ventana
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//activa el cerrado correcto de la ventana
+        addKeyListener(this);
+        setVisible(true);
+        hilomain = new Thread(this);
 
+        hilomain.start();//se habilita hilo de esta clase
+        hilomain.setPriority(2);//prioridad al hilo principal o motor del juego
+        this.setLocationRelativeTo(null);
+    }
+
+    public void initComponents(){
+        herramientasbar= new JMenuBar();
+        setJMenuBar(herramientasbar);
         for (int i = 0; i < Menunames.length; i++) {//se agregan los menus a la barra
             Menus[i] = new JMenu(Menunames[i]);//de herramientas
             herramientasbar.add(Menus[i]);
@@ -73,7 +87,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 Menus[i].addActionListener(this);//se agrega los ActionListener
             }
         }
-
         for (int i = 0; i < Itemnames.length; i++) {
             MenuItems[i] = new JMenuItem(Itemnames[i]);//se inician MenuItems
             if (i == 1) {
@@ -83,29 +96,14 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 MenuItems[i].addActionListener(this);
             }
         }
-
         gruposetting = new ButtonGroup();//grupo de botones para agregar en settings
-
         for (int i = 0; i < 3; i++) {
             setting.add(settingItems[i]);
             gruposetting.add(settingItems[i]);
             settingItems[i].addActionListener(this);
         }
-        addKeyListener(this);
-        this.setVisible(true);
-        hilomain = new Thread(this);
-        copiahilomain = hilomain;
+    }
 
-        hilomain.start();//se habilita hilo de esta clase
-        hilomain.setPriority(2);//prioridad al hilo principal o motor del juego
-        this.setLocationRelativeTo(null);
-
-
-    }//FIN DEL CONSTRUCTOR DE ESTE JFRAME
-
-    /************************************************
-     * ****AQUI ESTAN LOS METODOS DE ATENDER A LAS ACCIONS ACTION PERFORMED
-     ************************************************/
     public void actionPerformed(ActionEvent e) {
         int fuente = 0;
 
@@ -123,17 +121,16 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             }
         }
 
-        //luego de identificar cual se pulso se hace un switch con el numero obtenido
         switch (fuente) {
-            case 0://ahora sera selector de bola
-                JFrame frame = new ChooseBall();
-                frame.setVisible(true);
-                frame.setResizable(false);
-                System.out.println(Resource.getRootPath() + "KLK");
-                System.out.println(estadopantalla.dir);
+            case 0:
+                JDialog ballSelectorDialog = new BallSelector();
+                ballSelectorDialog.setModal(true);
+                ballSelectorDialog.setResizable(false);
+                ballSelectorDialog.setLocationRelativeTo(this);
+                ballSelectorDialog.setVisible(true);
                 break;
-            case 1://caso para seleccionar fondo
-                JFrame frame2 = new ChooseBackground();
+            case 1:
+                JFrame frame2 = new BackgroundSelector();
                 frame2.setVisible(true);
                 frame2.setResizable(false);
                 break;
@@ -141,7 +138,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 fullscreen();
                 break;
             case 3://caso para inicio
-                if (estadopantalla.pantallaPrincipal) {
+                if (screenState == ScreenState.STARTSCREEN) {
                     inicio = true;
                     System.out.println("has iniciado el juego");
                 }
@@ -154,146 +151,114 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         }
     }
 
-    public void run() {
-        while (true) {
-            try {                 //con este run,se ejecuta repaint
-                Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
-                repaint();
-            } catch (Exception e) {
-            }
-        }
-    }
-
-    /*******************************************************
-     * * AQUI SE ATIENDE A LAS ACCIONES DE LAS TECLAS
-     * *
-     *********************************************************/
     public void keyPressed(KeyEvent e) {
-        desideTecla(e.getKeyCode(), true);
+        readKeyBoard(e.getKeyCode(), true);
     }
 
-    @SuppressWarnings("static-access")
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             ball.flagball = !ball.flagball;
         }
         if (e.getKeyCode() == KeyEvent.VK_R) {
         }
-        desideTecla(e.getKeyCode(), false);
+        readKeyBoard(e.getKeyCode(), false);
     }
 
     public void keyTyped(KeyEvent e) {
     }
 
-    //ESTADOS DE TECLAS PARA BARRAS SE ADMINISTRAN AQUI
-    @SuppressWarnings("static-access")
-    public void desideTecla(int tecla, boolean bvalor) {
+    public void readKeyBoard(int tecla, boolean bvalor) {
 
         switch (tecla) {
             case KeyEvent.VK_UP:
-                Barra.setTeclas(barras.ARRIBA, bvalor);
+                Barra.setTeclas(ScrollBar.ARRIBA, bvalor);
                 break;
             case KeyEvent.VK_DOWN:
-                Barra.setTeclas(barras.ABAJO, bvalor);
+                Barra.setTeclas(ScrollBar.ABAJO, bvalor);
                 break;
             case KeyEvent.VK_END:
-                Barra.setTeclas(barras.ABAJO2, bvalor);
+                Barra.setTeclas(ScrollBar.ABAJO2, bvalor);
                 break;
             case KeyEvent.VK_HOME:
-                Barra.setTeclas(barras.ARRIBA2, bvalor);
+                Barra.setTeclas(ScrollBar.ARRIBA2, bvalor);
                 break;
             case KeyEvent.VK_ENTER:
 
                 break;
             case KeyEvent.VK_1:
-                if (estadopantalla.pantallaPrincipal && inicio) {
-                    modo1juego = true;//activa modo juego1 y comienza a jugar
-                    estadopantalla.pantallaPrincipal = false;
-                    estadopantalla.pantallaJuego = true;//habilita escenario de juego
-                    Tiempo ten = new Tiempo();// se inicia objeto tipo Tiempo 
-                    Thread hilotiempo = new Thread(ten);//se le pasa a un Thread
-                    hilotiempo.start();//inicia el hilo del cronometro del juego 
-                    audio = new Audio();//inicializa la clase para el sonido
-                    audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);//toca el sonido correspondiente al fondo-seleccionado
-                }
-                break;
-            case KeyEvent.VK_2:
-                if (estadopantalla.pantallaPrincipal && inicio) {
-                    Cliente hilon1 = new Cliente();//inicializa objeto		
-                    hilon1.start();    //inicia hilo de la clase Cliente
-                    estadopantalla.pantallaPrincipal = false;//desabilita pantalla inicial
-                    estadopantalla.pantallaJuego = true;//habilita fondo de juego
-                    modo2juego = true;//activa modo juego dos y por ello comienza a jugar
-                    Tiempo ten = new Tiempo();// se inicia objeto tipo Tiempo  
-                    hilotiempo = new Thread(ten);//se le pasa a un Thread
-                    hilotiempo.start(); //comienza hilo de reloj de tiempo
-                    estadopantalla.numfondo = 2;//si es en red se elige un fondo constante
-                    Ball.chosebola = 3;//se elige una bola constante
-                }
+                start();
                 break;
 
             case KeyEvent.VK_7:
-                reiniciar();
+                restart();
                 break;
         }
     }
 
-    //Metodo maximiza pantalla
     public void fullscreen() {
         if (!estaFull) {
-            grafica.setFullScreenWindow(this);
+            graphicDevice.setFullScreenWindow(this);
         } else {
-            grafica.setFullScreenWindow(null);
+            graphicDevice.setFullScreenWindow(null);
         }
         estaFull = !estaFull;
     }
 
-    //------------------------------------------------------------------------------
-//este metodo es el corazon visual del juego le manda el objeto
-//Graphics a todos los metodos de pintar en cada clase    
-    public void dobleBuffer(Graphics2D g2) {
-        estadopantalla.dibujar(g2);//DIBUJA LA PANTALLA
-        if (modo1juego || modo2juego) {
-            ball.Correrbola(g2);//dibuja bola
-            Barra.Moverbarra(g2);//mueve barras
-            puntajes.dibujar(g2);//dibuja puntuacion
+    public void start(){
+        if (screenState == ScreenState.STARTSCREEN && inicio) {
+            screenState = ScreenState.ONGAME;
+            if(null == this.ball){
+                this.ball = new Ball(Resource.Image.BASEBALL_BALL);
+            }
+            clock= new Clock();// se inicia objeto tipo Tiempo
+            clock.start();//inicia el hilo del cronometro del juego
+            audio = new Audio();//inicializa la clase para el sonido
+            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);//toca el sonido correspondiente al fondo-seleccionado
         }
     }
 
-    //reinicia el juego
-    public void reiniciar() {
+    public void restart() {
         inicio = false;
-        estadopantalla.pantallaPrincipal = true;
-        estadopantalla.pantallaJuego = false;
+        screenState = ScreenState.STARTSCREEN;
         modo1juego = false;
-        modo2juego = false;
         Score.puntosjugador1 = 0;
         Score.puntosjugador2 = 0;
-        Tiempo.segundos = 0;
-        Tiempo.minuto = 0;
+        Clock.segundos = 0;
+        Clock.minuto = 0;
         Ball.flagball = true;
         Ball.x = 64;
         Ball.y = 150;
-        barras.desplaza = 25.0;
-        barras.desplaza2 = 25.0;
+        ScrollBar.desplaza = 25.0;
+        ScrollBar.desplaza2 = 25.0;
     }
 
+    public void run() {
+        while (true) {
+            try {
+                Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
+                ball.run();
+                draw(this.getGraphics());
+            } catch (Exception e) {
+            }
+        }
+    }
 
-    //@Override
-    public void paint(Graphics g) {
+    public void draw(Graphics g ){
         if (inicio) {
             Graphics2D g2 = (Graphics2D) g;//se convierte objeto a Graphics de 2d
             Image mImage = createImage(getWidth(), getHeight());//utiliza el ancho y alto de pantalla y se la hereda-
-            //a la variable mImage de tipo Image
-            dobleBuffer((Graphics2D) mImage.getGraphics());//llama a la funcion dobleBuffer y le manda la variable graphics
-            g2.drawImage(mImage, 0, 20, this);
-        } else {
-            super.paint(g);//si no se esta en inicio se pinta al padre que es el JFrame
-        }
+            Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
+            g2dDouble.drawImage(backgroundImage, 0, 0, null);
 
+            ball.draw(g2dDouble);
+            Barra.Moverbarra(g2dDouble);//mueve barras
+            puntajes.dibujar(g2dDouble);//dibuja puntuacion
+
+            g2.drawImage(mImage, 0, 20, this);
+        }
     }
 
-    //MAIN PRINCIPAL AQUI SE INICIA TODO
+
     public static void main(String[] ars) {
         new Main();
     }
