@@ -6,7 +6,9 @@
  *  DERECHOS RESERVADOS
  -------------------------------------------------*/
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import java.awt.Graphics;
 import java.awt.Container;
@@ -17,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 public class BallSelector extends JDialog implements ActionListener {
 
-    public static int count = 0;
+    private int count;
     private JButton forwardButton;
     private JButton backButton;
     private JPanel panel;
@@ -34,6 +36,7 @@ public class BallSelector extends JDialog implements ActionListener {
         panel.add(backButton);
         panel.add(forwardButton);
         add(panel, BorderLayout.SOUTH);
+        count = 0;
         setSize(300, 180);
     }
 
@@ -51,7 +54,6 @@ public class BallSelector extends JDialog implements ActionListener {
                 count = 11;
             }
         }
-        Ball.chosebola = count;
         repaint();
     }
 
