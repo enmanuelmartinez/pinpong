@@ -24,21 +24,20 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private Clock clock;
     private BufferedImage backgroundImage;
 
-    //declaracion de variables de control
     public static final int ANCHO = 600;
     public static final int ALTO = 350;
     private boolean estaFull = false;
     public static boolean modo1juego = false;
     public static boolean inicio = false;
     static GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private Thread hilomain;
+    private Thread maintThread;
 
     //declaracion de menus, items
     private String Itemnames[] = {"Start", "Recor", "Records", "Exit"};
     private String Menunames[] = {"MAIN", "CREDITS", "HELP"};
     private JMenuItem MenuItems[] = new JMenuItem[Itemnames.length];
     private JMenu Menus[] = new JMenu[Menunames.length];
-    private JMenuBar herramientasbar;
+    private JMenuBar menuBar;
     JRadioButtonMenuItem[] settingItems = {
         new JRadioButtonMenuItem("Ball type"),
         new JRadioButtonMenuItem("BgdImage"),
@@ -56,6 +55,15 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
     public Main() {
         super("$----------JUEGO ENMANUEL PINPONG cliente$");
+        this.initComponents();
+        con = getContentPane();
+        setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addKeyListener(this);
+        setVisible(true);
+        setLocationRelativeTo(null);
+
         screenState = ScreenState.STARTSCREEN;
         Barra = new ScrollBar();
         puntajes = new Score();
@@ -64,27 +72,19 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.initComponents();
-        con = getContentPane();//se obtiene el contenedor del JFrame
-        setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
-        setResizable(false);//deshabilita cambiar de tamano a la ventana
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//activa el cerrado correcto de la ventana
-        addKeyListener(this);
-        setVisible(true);
-        hilomain = new Thread(this);
 
-        hilomain.start();//se habilita hilo de esta clase
-        hilomain.setPriority(2);//prioridad al hilo principal o motor del juego
-        this.setLocationRelativeTo(null);
+        maintThread = new Thread(this);
+        maintThread.start();//se habilita hilo de esta clase
+        maintThread.setPriority(1);//prioridad al hilo principal o motor del juego
     }
 
     public void initComponents(){
-        herramientasbar= new JMenuBar();
+        menuBar= new JMenuBar();
         setting = new JMenu("Settings");
-        setJMenuBar(herramientasbar);
+        setJMenuBar(menuBar);
         for (int i = 0; i < Menunames.length; i++) {//se agregan los menus a la barra
             Menus[i] = new JMenu(Menunames[i]);//de herramientas
-            herramientasbar.add(Menus[i]);
+            menuBar.add(Menus[i]);
             if (i > 0) {
                 Menus[i].addActionListener(this);//se agrega los ActionListener
             }
@@ -142,12 +142,16 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             case 3://caso para inicio
                 if (screenState == ScreenState.STARTSCREEN) {
                     inicio = true;
+                    menuBar.setVisible(false);
+                    menuBar.setBorderPainted(false);
+                    menuBar.setDoubleBuffered(false);
                     System.out.println("has iniciado el juego");
                 }
                 break;
             case 5://caso para record
                 break;
             case 6://caso de salida exit
+                this.dispose();
                 System.exit(0);
                 break;
         }
@@ -158,8 +162,17 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     }
 
     public void keyReleased(KeyEvent e) {
+
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            ball.flagball = !ball.flagball;
+            if(screenState == ScreenState.ONGAME){
+                screenState = ScreenState.PAUSED;
+                audio.stop();
+                maintThread.suspend();
+            }else{
+                audio.start();
+                maintThread.resume();
+                screenState = ScreenState.ONGAME;
+            }
         }
         if (e.getKeyCode() == KeyEvent.VK_R) {
         }
@@ -239,9 +252,11 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             try {
                 Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
                 ball.run();
+                Barra.run();
                 draw(this.getGraphics());
             } catch (Exception e) {
             }
+
         }
     }
 
@@ -253,7 +268,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             g2dDouble.drawImage(backgroundImage, 0, 0, null);
 
             ball.draw(g2dDouble);
-            Barra.Moverbarra(g2dDouble);//mueve barras
+            Barra.draw(g2dDouble);
             puntajes.dibujar(g2dDouble);//dibuja puntuacion
 
             g2.drawImage(mImage, 0, 20, this);

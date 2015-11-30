@@ -23,7 +23,6 @@ public class BallSelector extends JDialog implements ActionListener {
     private JPanel panel;
     private Container container;
 
-
     public BallSelector() {
         super();
         container = getContentPane();

@@ -8,8 +8,6 @@ import javax.swing.*;
  *  DATE     JULIO 2009
  *  DERECHOS RESERVADOS
  -------------------------------------------------*/
-//En esta clase se da la posibilidad de elegir el background(fondo)
-@SuppressWarnings("serial")
 public class BackgroundSelector extends JFrame implements ActionListener {
 
     public static int count = 1;

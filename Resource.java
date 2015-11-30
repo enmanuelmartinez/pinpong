@@ -32,8 +32,7 @@ public final class Resource
         public static final String IMAGES_ROOT =  Resource.getRootPath() + "images" + File.separator;
         public static final String BASEBALL_BALL = IMAGES_ROOT + "balls" + File.separator + "baseball_ball.png";
         public static final String BACKGROUND_MARIO = IMAGES_ROOT + "backgrounds" + File.separator + "mario.jpg";
-
-
+        public static final String TRUNK_BAR = IMAGES_ROOT + "trunk.png";
     }
  
 }

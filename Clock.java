@@ -1,7 +1,3 @@
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-
 /*--------------------------------------------------
  *
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
@@ -10,8 +6,8 @@ import java.awt.event.*;
  --------------------------------------------------*/
 //Esta clase es la que actua como un cronometro
 public class Clock extends Thread {
-    static int segundos = 0, minuto = 0;
 
+    static int segundos = 0, minuto = 0;
     public static String time = "";
 
     public Clock() {
@@ -22,13 +18,11 @@ public class Clock extends Thread {
         while (true) {
             try {
                 Thread.sleep(1000);
-
-                segundos++;
+                segundos ++;
                 if (segundos == 60) {
                     segundos = 0;
                     minuto++;
                 }
-
                 time = "" + minuto + ":" + "" + segundos;
             } catch (Exception es) {
             }

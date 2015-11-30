@@ -39,4 +39,10 @@ public class Audio {
         secuencer.stop();
     }
 
+    public void start(){
+        secuencer.start();
+    }
+
+
+
 }

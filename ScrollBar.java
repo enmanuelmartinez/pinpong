@@ -18,17 +18,16 @@ public class ScrollBar {
     private final double min = 0, max = 230;
     static double desplaza = 25.0, desplaza2 = 25.0;
     double dy = 1, dy2 = 1;
-    //las im�genes
     private final String dir = Resource.getRootPath() + "resources/images" + File.separator;//direccion de las imagenes
     private final String rutaImagen[] = {dir + "paleta1.gif", dir + "paleta2.gif"};//barra uno y dos
-    private BufferedImage palitos[];//arreglo de BufferedImage
+    private BufferedImage barImage;//arreglo de BufferedImage
 
 
     public ScrollBar() {
-        palitos = new BufferedImage[rutaImagen.length];
-        //aqui se obtienen las imagenes cuando se inicia la clase
-        for (int n = 0; n < rutaImagen.length; n++) {
-            palitos[n] = this.getImagen(n);
+        try {
+            barImage = ImageIO.read(new File(Resource.Image.TRUNK_BAR));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,7 +51,7 @@ public class ScrollBar {
     }
 
     //metodo que decide cual barra mover
-    public void Moverbarra(Graphics2D g2) {
+    public void run() {
 
         final double incremento = 1.70;
 
@@ -79,25 +78,11 @@ public class ScrollBar {
         if (Teclas[ARRIBA2] || Teclas[ABAJO2]) {
             desplaza2 = limitevertical(desplaza2);
         }
-
-        //despues de desplazar barras  las pinta
-        pintabarra(g2);
     }
 
-    //obtiene una BufferedImage apartir de la ruta especificada y la retorna
-    private BufferedImage getImagen(int n) {
-        try {
-            return ImageIO.read(new File(rutaImagen[n]));
-        } catch (Exception e) {
-            return null;
-        }
-    }
+    public void draw(Graphics2D g2) {
+        g2.drawImage(this.barImage, 20, (int) Math.round(desplaza), null);
+        g2.drawImage(this.barImage, main1.ANCHO - 60, (int) Math.round(desplaza2), null);
 
-    @SuppressWarnings("static-access")
-    public void pintabarra(Graphics2D g2) {
-        if (main1.modo1juego) {//si se esta en one player
-            g2.drawImage(palitos[0], 20, (int) Math.round(desplaza), null);
-            g2.drawImage(palitos[1], main1.ANCHO - 60, (int) Math.round(desplaza2), null);
-        }
     }
 }
