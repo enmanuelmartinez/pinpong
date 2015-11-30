@@ -13,39 +13,35 @@ import javax.swing.*;
 public class BackgroundSelector extends JFrame implements ActionListener {
 
     public static int count = 1;
-    JButton alante;
-    JButton atras;
+    JButton forwardButton;
+    JButton backButton;
 
     public BackgroundSelector()//constructor
     {
         super("ChooseBackground");
-        JPanel p = new JPanel();
-        alante = new JButton("-->");
-        atras = new JButton("<--");
-        alante.addActionListener(this);
-        atras.addActionListener(this);
-        p.add(atras);
-        p.add(alante);
-        add(p, BorderLayout.SOUTH);
+        JPanel panel = new JPanel();
+        forwardButton = new JButton("-->");
+        backButton = new JButton("<--");
+        forwardButton.addActionListener(this);
+        backButton.addActionListener(this);
+        panel.add(backButton);
+        panel.add(forwardButton);
+        add(panel, BorderLayout.SOUTH);
         setSize(300, 180);
     }
 
-    @SuppressWarnings("static-access")
     public void actionPerformed(ActionEvent e) {
-        //aqui se controla los botones atras y adelante para cambiar de fondo
-        if (e.getSource() == alante) {
+        if (e.getSource() == forwardButton) {
             count++;
             if (count > 8) {
                 count = 1;
             }
-        }
-        if (e.getSource() == atras) {
+        }else if (e.getSource() == backButton) {
             count--;
             if (count < 1) {
                 count = 8;
             }
         }
-
         repaint();
     }
 

@@ -95,15 +95,9 @@ public class ScrollBar {
 
     @SuppressWarnings("static-access")
     public void pintabarra(Graphics2D g2) {
-
         if (main1.modo1juego) {//si se esta en one player
             g2.drawImage(palitos[0], 20, (int) Math.round(desplaza), null);
             g2.drawImage(palitos[1], main1.ANCHO - 60, (int) Math.round(desplaza2), null);
         }
-        if (main1.modo2juego)//si se esta en en dos player
-        {
-            g2.drawImage(palitos[0], 20, (int) Math.round(desplaza), null);
-        }
-
     }
 }

@@ -28,7 +28,8 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     public static final int ANCHO = 600;
     public static final int ALTO = 350;
     private boolean estaFull = false;
-    public static boolean modo1juego = false, modo2juego = false, inicio = false;
+    public static boolean modo1juego = false;
+    public static boolean inicio = false;
     static GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private Thread hilomain;
 
@@ -43,7 +44,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         new JRadioButtonMenuItem("BgdImage"),
         new JRadioButtonMenuItem("Fullscreen")
     };
-    JMenu setting = new JMenu("Settings");
+    JMenu setting;
     ButtonGroup gruposetting;
     Container con;
 
@@ -79,6 +80,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
     public void initComponents(){
         herramientasbar= new JMenuBar();
+        setting = new JMenu("Settings");
         setJMenuBar(herramientasbar);
         for (int i = 0; i < Menunames.length; i++) {//se agregan los menus a la barra
             Menus[i] = new JMenu(Menunames[i]);//de herramientas
