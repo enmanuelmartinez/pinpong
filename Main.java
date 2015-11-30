@@ -13,16 +13,16 @@ import java.nio.file.Paths;
  * DATE     JUNIO 2009
  * DERECHOS RESERVADOS
 --------------------------------------------------*/
-public class Main1 extends JFrame implements ActionListener, Runnable, KeyListener {
+public class Main extends JFrame implements ActionListener, Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
-    midifiles midis;
+    private Audio audio;
     Cliente cliente;
-    Bola ball;
+    Ball ball;
     barras Barra;
     Estadopantalla estadopantalla;
-    Datos datos;
-    Puntajes puntajes;
+    Resource datos;
+    Score puntajes;
 
     //declaracion de variables de control
     public static final int ANCHO = 600;
@@ -54,12 +54,12 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
     Thread hilotiempo;
     Thread hilocliente2;
 
-    public Main1() {
+    public Main() {
         super("$----------JUEGO ENMANUEL PINPONG cliente$");
         estadopantalla = new Estadopantalla();//inicializacion de clase Estadopantalla
-        ball = new Bola();//inicializacion de clase Bola
+        ball = new Ball();//inicializacion de clase Bola
         Barra = new barras();////inicializacion de clase barras
-        puntajes = new Puntajes();////inicializacion de clase puntajes    
+        puntajes = new Score();////inicializacion de clase puntajes
         this.setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
         this.setResizable(false);//deshabilita cambiar de tamano a la ventana
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//activa el cerrado correcto de la ventana
@@ -129,7 +129,7 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
                 JFrame frame = new ChooseBall();
                 frame.setVisible(true);
                 frame.setResizable(false);
-                System.out.println(Datos.Ruta() + "KLK");
+                System.out.println(Resource.getRootPath() + "KLK");
                 System.out.println(estadopantalla.dir);
                 break;
             case 1://caso para seleccionar fondo
@@ -213,8 +213,8 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
                     Tiempo ten = new Tiempo();// se inicia objeto tipo Tiempo 
                     Thread hilotiempo = new Thread(ten);//se le pasa a un Thread
                     hilotiempo.start();//inicia el hilo del cronometro del juego 
-                    midis = new midifiles();//inicializa la clase para el sonido
-                    midis.repronum(estadopantalla.numfondo - 1);//toca el sonido correspondiente al fondo-seleccionado
+                    audio = new Audio();//inicializa la clase para el sonido
+                    audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);//toca el sonido correspondiente al fondo-seleccionado
                 }
                 break;
             case KeyEvent.VK_2:
@@ -228,7 +228,7 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
                     hilotiempo = new Thread(ten);//se le pasa a un Thread
                     hilotiempo.start(); //comienza hilo de reloj de tiempo
                     estadopantalla.numfondo = 2;//si es en red se elige un fondo constante
-                    Bola.chosebola = 3;//se elige una bola constante
+                    Ball.chosebola = 3;//se elige una bola constante
                 }
                 break;
 
@@ -267,13 +267,13 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
         estadopantalla.pantallaJuego = false;
         modo1juego = false;
         modo2juego = false;
-        Puntajes.puntosjugador1 = 0;
-        Puntajes.puntosjugador2 = 0;
+        Score.puntosjugador1 = 0;
+        Score.puntosjugador2 = 0;
         Tiempo.segundos = 0;
         Tiempo.minuto = 0;
-        Bola.flagball = true;
-        Bola.x = 64;
-        Bola.y = 150;
+        Ball.flagball = true;
+        Ball.x = 64;
+        Ball.y = 150;
         barras.desplaza = 25.0;
         barras.desplaza2 = 25.0;
     }
@@ -295,6 +295,6 @@ public class Main1 extends JFrame implements ActionListener, Runnable, KeyListen
 
     //MAIN PRINCIPAL AQUI SE INICIA TODO
     public static void main(String[] ars) {
-        new Main1();
+        new Main();
     }
 }

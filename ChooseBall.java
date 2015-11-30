@@ -15,43 +15,38 @@ import javax.swing.*;
 //solo que ahora se elige la bola
 public class ChooseBall extends JFrame implements ActionListener {
 
-    boolean c = true;
     public static int count = 0;
-    Bola ballacceso;
+    Ball ballacceso;
     Estadopantalla k;
-    JButton alante;
-    JButton atras;
-    Container con;
-    Thread t;
+    private JButton forwardButton;
+    private JButton backButton;
+    private Container container;
 
     public ChooseBall() {
         super("ChooseBall");
-        con = getContentPane();
-        ballacceso = new Bola();
+        container = getContentPane();
+        ballacceso = new Ball();
         k = new Estadopantalla();
-        JPanel p = new JPanel();
-        alante = new JButton("-->");
-        atras = new JButton("<--");
-        alante.addActionListener(this);
-        atras.addActionListener(this);
-        p.add(atras);
-        p.add(alante);
-        add(p, BorderLayout.SOUTH);
+        JPanel panel = new JPanel();
+        this.forwardButton = new JButton("-->");
+        this.backButton = new JButton("<--");
+        this.forwardButton.addActionListener(this);
+        this.backButton.addActionListener(this);
+        panel.add(this.backButton);
+        panel.add(this.forwardButton);
+        add(panel, BorderLayout.SOUTH);
         setSize(300, 180);
-
     }
 
-
-    @SuppressWarnings("static-access")
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == alante) {
+        if (e.getSource() == this.forwardButton) {
             count++;
             if (count > 11) {
                 count = 0;
             }
         }
-        if (e.getSource() == atras) {
+        if (e.getSource() == this.backButton) {
             count--;
             if (count < 0) {
                 count = 11;
@@ -69,6 +64,3 @@ public class ChooseBall extends JFrame implements ActionListener {
 
 
 }
-        
-        
-

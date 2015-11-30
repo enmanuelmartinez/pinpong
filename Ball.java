@@ -11,14 +11,14 @@ import javax.swing.*;
  *  DERECHOS RESERVADOS
  -------------------------------------------------*/
 
-@SuppressWarnings("serial")
-public class Bola extends JComponent {
+public class Ball extends JComponent {
 
-    @SuppressWarnings("unused")
-    Main1 main1;
+    Main main1;
     private ChooseBall ge;
-    private Puntajes puntajes;
+    private Score puntajes;
     private barras bar;
+
+    private BufferedImage image;
 
     final int diambola = 35;
     final static int ANCHO = 600;
@@ -32,6 +32,7 @@ public class Bola extends JComponent {
     static int chosebola = 0;
     public static boolean mandame = false;//variable que habilita la enviada de bola por red
     BufferedImage bolas[];
+
     //rutas de las imagenes de las pelotas
     final String rutabolas[] = {
         dir + "baseball_ball.png", dir + "baseball_ball.png",
@@ -41,9 +42,8 @@ public class Bola extends JComponent {
         dir + "pelota11.gif"
     };
 
-    // constructor de la clase Bola
 
-    public Bola() {
+    public Ball() {
 
         delta_t = 4;//factor que multiplica el desplazamiento de la bola
         flagball = true;// habilita el pintado y el desplazamiento de la bola
@@ -68,7 +68,17 @@ public class Bola extends JComponent {
         }
     }
 
-    @SuppressWarnings("static-access")
+    public void run(){
+        if (flagball)// aqui se controla movimiento de bola pintado y cambio de posicion
+        {
+            accion(delta_t);//cambia de posicion la bola y hace comparaciones de limite
+        }
+    }
+
+    public void draw(final Graphics2D g2) {
+        g2.drawImage(bolas[chosebola], Math.round(x), Math.round(y), null);
+    }
+
     // Metodo que cambia de posicion la bola
     private void accion(float delta_t) {
         x += vx * delta_t;
@@ -78,7 +88,7 @@ public class Bola extends JComponent {
             vy = -vy;
         }
 
-        if (Main1.modo1juego) {// Si se esta en modo de juego uno
+        if (Main.modo1juego) {// Si se esta en modo de juego uno
 
             if ((vx < 0 && x >= 5 && x <= 50)
                     && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
@@ -103,7 +113,7 @@ public class Bola extends JComponent {
 
         }
 
-        if (Main1.modo2juego)// Si se esta en modo de juego dos
+        if (Main.modo2juego)// Si se esta en modo de juego dos
         {
 
             if (vx > 0 && x + diambola >= ANCHO + 130) {

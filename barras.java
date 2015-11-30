@@ -12,15 +12,14 @@ import javax.imageio.ImageIO;
 
 public class barras {
 
-    Bola pelota;
-    Main1 main1;
+    Main main1;
     public static final int ARRIBA = 0, ABAJO = 1, ARRIBA2 = 2, ABAJO2 = 3;
     private boolean Teclas[] = new boolean[4];
     private final double min = 0, max = 230;
     static double desplaza = 25.0, desplaza2 = 25.0;
     double dy = 1, dy2 = 1;
     //las im�genes
-    private final String dir = Datos.Ruta() + "imagenes" + File.separator;//direccion de las imagenes
+    private final String dir = Resource.getRootPath() + "imagenes" + File.separator;//direccion de las imagenes
     private final String rutaImagen[] = {dir + "paleta1.gif", dir + "paleta2.gif"};//barra uno y dos
     private BufferedImage palitos[];//arreglo de BufferedImage
 
@@ -34,7 +33,6 @@ public class barras {
     }
 
     //Este metodo es el que registra cuales teclas fueron pulsadas en KeyListener
-    //de la clase Main1
     public void setTeclas(int nTecla, boolean bvalor) {
         if (nTecla >= 0 && nTecla <= 3) {
             Teclas[nTecla] = bvalor;
