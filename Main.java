@@ -28,7 +28,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     public static final int ALTO = 350;
     private boolean estaFull = false;
     public static boolean modo1juego = false;
-    public static boolean inicio = false;
     static GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private Thread maintThread;
 
@@ -139,9 +138,8 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             case 2://caso para fullscreen
                 fullscreen();
                 break;
-            case 3://caso para inicio
+            case 3:
                 if (screenState == ScreenState.STARTSCREEN) {
-                    inicio = true;
                     menuBar.setVisible(false);
                     menuBar.setBorderPainted(false);
                     menuBar.setDoubleBuffered(false);
@@ -220,7 +218,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     }
 
     public void start(){
-        if (screenState == ScreenState.STARTSCREEN && inicio) {
+        if (screenState == ScreenState.STARTSCREEN) {
             screenState = ScreenState.ONGAME;
             if(null == this.ball){
                 this.ball = new Ball(Resource.Image.BASEBALL_BALL);
@@ -233,7 +231,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     }
 
     public void restart() {
-        inicio = false;
+
         screenState = ScreenState.STARTSCREEN;
         modo1juego = false;
         Score.puntosjugador1 = 0;
@@ -261,7 +259,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     }
 
     public void draw(Graphics g ){
-        if (inicio) {
+        if (screenState == ScreenState.ONGAME) {
             Graphics2D g2 = (Graphics2D) g;//se convierte objeto a Graphics de 2d
             Image mImage = createImage(getWidth(), getHeight());//utiliza el ancho y alto de pantalla y se la hereda-
             Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
