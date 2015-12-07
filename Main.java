@@ -216,7 +216,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             if (null == this.ball) {
                 this.ball = new Ball(Resource.Image.BASEBALL_BALL, 50, 50, 1, 1);
             }
-            clock = new Clock();
+            clock = Clock.getInstance();
             scores = new Score();
             bar = new ScrollBar(20, 50, 1.70);
             clock.start();
@@ -229,8 +229,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         screenState = ScreenState.STARTSCREEN;
         Score.puntosjugador1 = 0;
         Score.puntosjugador2 = 0;
-        Clock.segundos = 0;
-        Clock.minuto = 0;
+        clock.reset();
     }
 
     public void draw(Graphics g) {

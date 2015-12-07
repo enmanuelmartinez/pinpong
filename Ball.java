@@ -48,14 +48,14 @@ public class Ball extends JComponent {
     }
 
     public void run(){
-        accion(deltaTime);
+        move(deltaTime);
     }
 
     public void draw(final Graphics2D g2) {
         g2.drawImage(this.image, Math.round(x), Math.round(y), null);
     }
 
-    private void accion(float delta_t) {
+    private void move(float delta_t) {
         x += vx * delta_t;
         y += vy * delta_t;
 

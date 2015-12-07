@@ -1,31 +1,64 @@
-import java.awt.*;
 
-/*--------------------------------------------------
- *
+
+/*
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
    DATE  29 JUNIO 2009
  * DERECHOS RESERVADOS
- --------------------------------------------------*/
-//Esta clase es la que actua como un cronometro
+*/
+
+import java.awt.Graphics2D;
+
 public class Clock extends Thread {
 
-    static int segundos = 0, minuto = 0;
+    private int seconds;
+    private int minutes;
     public static String time = "";
 
-    public Clock() {
+    private static Clock instance;
 
+    protected Clock() {
+        seconds = 0;
+        minutes = 0;
+    }
+
+    public static Clock getInstance(){
+        if(null == instance){
+            instance = new Clock();
+        }
+        return instance;
+    }
+
+    public void setSeconds(int seconds){
+        this.seconds = seconds;
+    }
+
+    public int getSeconds(){
+        return seconds;
+    }
+
+    public void setMinutes(int minutes){
+        this.minutes = minutes;
+    }
+
+    public int getMinutes(){
+        return minutes;
+    }
+
+    public void reset(){
+        seconds = 0;
+        minutes = 0;
     }
 
     public void run() {
         while (true) {
             try {
                 Thread.sleep(1000);
-                segundos ++;
-                if (segundos == 60) {
-                    segundos = 0;
-                    minuto++;
+                seconds ++;
+                if (seconds == 60) {
+                    seconds = 0;
+                    minutes ++;
                 }
-                time = "" + minuto + ":" + "" + segundos;
+                time = "" + minutes + ":" + "" + seconds;
             } catch (Exception es) {
             }
         }
