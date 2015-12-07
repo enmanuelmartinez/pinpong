@@ -8,30 +8,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-/*-------------------------------------------------
- *
+/*
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
  * DATE     JUNIO 2009
  * DERECHOS RESERVADOS
---------------------------------------------------*/
+*/
 public class Main extends JFrame implements ActionListener, Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
-    private Audio audio;
-    private Ball ball = null;
-    private ScrollBar Barra;
-    private Score puntajes;
-    private Clock clock;
-    private BufferedImage backgroundImage;
-
-    public static final int ANCHO = 600;
-    public static final int ALTO = 350;
-    private boolean estaFull = false;
-    public static boolean modo1juego = false;
-    static GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private Thread maintThread;
-
-    //declaracion de menus, items
     private String Itemnames[] = {"Start", "Recor", "Records", "Exit"};
     private String Menunames[] = {"MAIN", "CREDITS", "HELP"};
     private JMenuItem MenuItems[] = new JMenuItem[Itemnames.length];
@@ -44,7 +28,22 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     };
     JMenu setting;
     ButtonGroup gruposetting;
-    Container con;
+
+    private Audio audio;
+    private Ball ball = null;
+    private ScrollBar bar;
+    private Score scores;
+    private Clock clock;
+    private BufferedImage backgroundImage;
+
+    private GraphicsDevice graphicDevice;
+
+    public static final int ANCHO = 600;
+    public static final int ALTO = 350;
+    private boolean isFullScreen = false;
+    public static boolean modo1juego = false;
+
+    private Thread maintThread;
 
     public enum ScreenState {
         STARTSCREEN , ONGAME, PAUSED;
@@ -53,19 +52,18 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private ScreenState screenState;
 
     public Main() {
-        super("$----------JUEGO ENMANUEL PINPONG cliente$");
+        super("PINPONG GAME");
         this.initComponents();
-        con = getContentPane();
         setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyListener(this);
         setVisible(true);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         screenState = ScreenState.STARTSCREEN;
-        Barra = new ScrollBar();
-        puntajes = new Score();
+        bar = new ScrollBar();
+        scores = new Score();
         try {
             backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
         } catch (Exception e) {
@@ -73,23 +71,23 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         }
 
         maintThread = new Thread(this);
-        maintThread.start();//se habilita hilo de esta clase
-        maintThread.setPriority(1);//prioridad al hilo principal o motor del juego
+        maintThread.start();
+        maintThread.setPriority(1);
     }
 
     public void initComponents(){
         menuBar= new JMenuBar();
         setting = new JMenu("Settings");
         setJMenuBar(menuBar);
-        for (int i = 0; i < Menunames.length; i++) {//se agregan los menus a la barra
-            Menus[i] = new JMenu(Menunames[i]);//de herramientas
+        for (int i = 0; i < Menunames.length; i++) {
+            Menus[i] = new JMenu(Menunames[i]);
             menuBar.add(Menus[i]);
             if (i > 0) {
-                Menus[i].addActionListener(this);//se agrega los ActionListener
+                Menus[i].addActionListener(this);
             }
         }
         for (int i = 0; i < Itemnames.length; i++) {
-            MenuItems[i] = new JMenuItem(Itemnames[i]);//se inician MenuItems
+            MenuItems[i] = new JMenuItem(Itemnames[i]);
             if (i == 1) {
                 Menus[0].add(setting);
             } else {
@@ -97,7 +95,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 MenuItems[i].addActionListener(this);
             }
         }
-        gruposetting = new ButtonGroup();//grupo de botones para agregar en settings
+        gruposetting = new ButtonGroup();
         for (int i = 0; i < 3; i++) {
             setting.add(settingItems[i]);
             gruposetting.add(settingItems[i]);
@@ -108,7 +106,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     public void actionPerformed(ActionEvent e) {
         int fuente = 0;
 
-        //se revisa cual de las opciones se pulsan en los menus
         for (int i = 0; i < 3; i++) {
             if (e.getSource() == settingItems[i]) {
                 fuente = i;
@@ -131,11 +128,13 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 ballSelectorDialog.setVisible(true);
                 break;
             case 1:
-                JFrame frame2 = new BackgroundSelector();
-                frame2.setVisible(true);
-                frame2.setResizable(false);
+                JDialog backgroundSelector = new BackgroundSelector();
+                backgroundSelector.setModal(true);
+                backgroundSelector.setResizable(false);
+                backgroundSelector.setLocationRelativeTo(this);
+                backgroundSelector.setVisible(true);
                 break;
-            case 2://caso para fullscreen
+            case 2:
                 fullscreen();
                 break;
             case 3:
@@ -146,9 +145,9 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                     System.out.println("has iniciado el juego");
                 }
                 break;
-            case 5://caso para record
+            case 5:
                 break;
-            case 6://caso de salida exit
+            case 6:
                 this.dispose();
                 System.exit(0);
                 break;
@@ -184,16 +183,16 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
         switch (tecla) {
             case KeyEvent.VK_UP:
-                Barra.setTeclas(ScrollBar.ARRIBA, bvalor);
+                bar.setTeclas(ScrollBar.ARRIBA, bvalor);
                 break;
             case KeyEvent.VK_DOWN:
-                Barra.setTeclas(ScrollBar.ABAJO, bvalor);
+                bar.setTeclas(ScrollBar.ABAJO, bvalor);
                 break;
             case KeyEvent.VK_END:
-                Barra.setTeclas(ScrollBar.ABAJO2, bvalor);
+                bar.setTeclas(ScrollBar.ABAJO2, bvalor);
                 break;
             case KeyEvent.VK_HOME:
-                Barra.setTeclas(ScrollBar.ARRIBA2, bvalor);
+                bar.setTeclas(ScrollBar.ARRIBA2, bvalor);
                 break;
             case KeyEvent.VK_ENTER:
 
@@ -209,12 +208,13 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     }
 
     public void fullscreen() {
-        if (!estaFull) {
+        GraphicsDevice graphicDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        if (!isFullScreen) {
             graphicDevice.setFullScreenWindow(this);
         } else {
             graphicDevice.setFullScreenWindow(null);
         }
-        estaFull = !estaFull;
+        isFullScreen = !isFullScreen;
     }
 
     public void start(){
@@ -223,15 +223,14 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             if(null == this.ball){
                 this.ball = new Ball(Resource.Image.BASEBALL_BALL);
             }
-            clock= new Clock();// se inicia objeto tipo Tiempo
-            clock.start();//inicia el hilo del cronometro del juego
-            audio = new Audio();//inicializa la clase para el sonido
-            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);//toca el sonido correspondiente al fondo-seleccionado
+            clock= new Clock();
+            clock.start();
+            audio = new Audio();
+            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);
         }
     }
 
     public void restart() {
-
         screenState = ScreenState.STARTSCREEN;
         modo1juego = false;
         Score.puntosjugador1 = 0;
@@ -245,34 +244,33 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         ScrollBar.desplaza2 = 25.0;
     }
 
+    public void draw(Graphics g ){
+        if (screenState == ScreenState.ONGAME) {
+            Graphics2D g2 = (Graphics2D) g;
+            Image mImage = createImage(getWidth(), getHeight());
+            Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
+            g2dDouble.drawImage(backgroundImage, 0, 0, null);
+
+            ball.draw(g2dDouble);
+            bar.draw(g2dDouble);
+            scores.dibujar(g2dDouble);
+
+            g2.drawImage(mImage, 0, 20, this);
+        }
+    }
+
     public void run() {
         while (true) {
             try {
                 Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
                 ball.run();
-                Barra.run();
+                bar.run();
                 draw(this.getGraphics());
             } catch (Exception e) {
             }
 
         }
     }
-
-    public void draw(Graphics g ){
-        if (screenState == ScreenState.ONGAME) {
-            Graphics2D g2 = (Graphics2D) g;//se convierte objeto a Graphics de 2d
-            Image mImage = createImage(getWidth(), getHeight());//utiliza el ancho y alto de pantalla y se la hereda-
-            Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
-            g2dDouble.drawImage(backgroundImage, 0, 0, null);
-
-            ball.draw(g2dDouble);
-            Barra.draw(g2dDouble);
-            puntajes.dibujar(g2dDouble);//dibuja puntuacion
-
-            g2.drawImage(mImage, 0, 20, this);
-        }
-    }
-
 
     public static void main(String[] ars) {
         new Main();

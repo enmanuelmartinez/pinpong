@@ -23,10 +23,10 @@ public class Audio {
     public void reproduce(String direccion) {
         try {
             File audioFile = new File(direccion);
-            Sequence Senc = MidiSystem.getSequence(audioFile);
+            Sequence sequence = MidiSystem.getSequence(audioFile);
             secuencer = MidiSystem.getSequencer();
             secuencer.open();
-            secuencer.setSequence(Senc);
+            secuencer.setSequence(sequence);
             secuencer.setLoopCount(50);
             secuencer.start();
         } catch (MidiUnavailableException ecc) {

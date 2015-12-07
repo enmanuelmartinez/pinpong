@@ -2,21 +2,20 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-/*--------------------------------------------------
- *
+/*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
  *  DATE     JULIO 2009
- *  DERECHOS RESERVADOS
- -------------------------------------------------*/
-public class BackgroundSelector extends JFrame implements ActionListener {
+ *  DERECHOS RESERVADOS*/
+
+public class BackgroundSelector extends JDialog implements ActionListener {
 
     public static int count = 1;
     JButton forwardButton;
     JButton backButton;
 
-    public BackgroundSelector()//constructor
+    public BackgroundSelector()
     {
-        super("ChooseBackground");
+        super();
         JPanel panel = new JPanel();
         forwardButton = new JButton("-->");
         backButton = new JButton("<--");

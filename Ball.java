@@ -4,12 +4,11 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-/*--------------------------------------------------
- *
+/*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
  *  DATE     JUNIO 2009
  *  DERECHOS RESERVADOS
- -------------------------------------------------*/
+*/
 
 public class Ball extends JComponent {
 
@@ -20,7 +19,7 @@ public class Ball extends JComponent {
 
     private BufferedImage image;
 
-    final int diambola = 35;
+    final int diameter = 35;
     final static int ANCHO = 600;
     final static int ALTO = 350;
     static int x, y;
@@ -28,7 +27,6 @@ public class Ball extends JComponent {
     int delta_t, aun = 0;
     static boolean flagball;
     static int chosebola = 0;
-    public static boolean mandame = false;//variable que habilita la enviada de bola por red
 
     public static final String rutabolas[] = {
         Resource.Image.BASEBALL_BALL
@@ -36,12 +34,12 @@ public class Ball extends JComponent {
 
     public Ball(String ballImageResource) {
 
-        delta_t = 4;//factor que multiplica el desplazamiento de la bola
+        delta_t = 10;
         flagball = true;// habilita el pintado y el desplazamiento de la bola
-        x = 64;//posicion inicial
-        y = 150;//posicion inicial
-        vx = 1;// define velocidad en x
-        vy = 1;//define velocidad en y
+        x = 64;
+        y = 150;
+        vx = 1;
+        vy = 1;
         try {
             this.image = ImageIO.read(new File(ballImageResource));
         } catch (Exception e) {
@@ -51,19 +49,18 @@ public class Ball extends JComponent {
     }
 
     public void run(){
-        accion(delta_t);//cambia de posicion la bola y hace comparaciones de limite
+        accion(delta_t);
     }
 
     public void draw(final Graphics2D g2) {
         g2.drawImage(this.image, Math.round(x), Math.round(y), null);
     }
 
-    // Metodo que cambia de posicion la bola
     private void accion(float delta_t) {
         x += vx * delta_t;
         y += vy * delta_t;
 
-        if (vy < 0 && y <= 10 || vy > 0 && y + diambola >= ALTO) {//rebote vertical
+        if (vy < 0 && y <= 10 || vy > 0 && y + diameter >= ALTO) {//rebote vertical
             vy = -vy;
         }
 
@@ -77,11 +74,11 @@ public class Ball extends JComponent {
             aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
             delta_t = aun;
         }// si pega tabla2
-        if (vx < 0 && x <= -diambola - 14) {
+        if (vx < 0 && x <= -diameter - 14) {
             puntajes.puntosjugador2 ++;
             bolaposi();
         }// si se le anota a player1
-        if (vx > 0 && x >= ANCHO + diambola) {
+        if (vx > 0 && x >= ANCHO + diameter) {
             puntajes.puntosjugador1++;
             bolaposi();
         }
@@ -105,7 +102,7 @@ public class Ball extends JComponent {
 
     }
 
-    public int aleat()// Da un numero aleatorio de 0-12
+    public int aleat()
     {
         int num = 0;
         num = (int) Math.random() * 12;

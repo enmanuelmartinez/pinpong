@@ -1,10 +1,10 @@
-/*--------------------------------------------------
- *
+
+/*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
  *  DATE     JULIO 2009
  *  UPDATED   NOVEMBER 2015
  *  DERECHOS RESERVADOS
- -------------------------------------------------*/
+ */
 
 import javax.swing.JDialog;
 import javax.swing.JButton;
