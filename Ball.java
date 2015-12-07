@@ -12,7 +12,6 @@ import javax.swing.*;
 
 public class Ball extends JComponent {
 
-    Main main1;
     private BallSelector ge;
     private Score puntajes;
     private ScrollBar bar;
@@ -22,24 +21,24 @@ public class Ball extends JComponent {
     final int diameter = 35;
     final static int ANCHO = 600;
     final static int ALTO = 350;
-    static int x, y;
-    static int vx, vy;
-    int delta_t, aun = 0;
-    static boolean flagball;
+    private int x;
+    private int y;
+    private int vx;
+    private int vy;
+    int deltaTime, aun = 0;
     static int chosebola = 0;
 
     public static final String rutabolas[] = {
         Resource.Image.BASEBALL_BALL
     };
 
-    public Ball(String ballImageResource) {
+    public Ball(String ballImageResource, int x, int y, int vx, int vy) {
 
-        delta_t = 10;
-        flagball = true;// habilita el pintado y el desplazamiento de la bola
-        x = 64;
-        y = 150;
-        vx = 1;
-        vy = 1;
+        deltaTime = 10;
+        this.x = x;
+        this.y= y;
+        this.vx = vx;
+        this.vy = vy;
         try {
             this.image = ImageIO.read(new File(ballImageResource));
         } catch (Exception e) {
@@ -49,7 +48,7 @@ public class Ball extends JComponent {
     }
 
     public void run(){
-        accion(delta_t);
+        accion(deltaTime);
     }
 
     public void draw(final Graphics2D g2) {
@@ -64,16 +63,16 @@ public class Ball extends JComponent {
             vy = -vy;
         }
 
-        if ((vx < 0 && x >= 5 && x <= 50) && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
+        /*if ((vx < 0 && x >= 5 && x <= 50) && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
             vx = -vx;
             aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
             delta_t = aun;
-        }// si pega tabla uno
-        if ((vx > 0 && x >= ANCHO - 100 && x <= ANCHO - 80) && (y >= bar.desplaza2 - 25 && y <= 100 + bar.desplaza2)) {
+        }// si pega tabla uno*/
+        /*if ((vx > 0 && x >= ANCHO - 100 && x <= ANCHO - 80) && (y >= bar.desplaza2 - 25 && y <= 100 + bar.desplaza2)) {
             vx = -vx;
             aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
             delta_t = aun;
-        }// si pega tabla2
+        }// si pega tabla2*/
         if (vx < 0 && x <= -diameter - 14) {
             puntajes.puntosjugador2 ++;
             bolaposi();
@@ -93,7 +92,7 @@ public class Ball extends JComponent {
         }
         x = (ANCHO / 2);
         y = (ALTO / 2) + aleat() + 10 - aleat() % 2;
-        delta_t = 4;
+        deltaTime = 4;
         if (aleat() % 2 == 0) {
             vx = -vx;
         } else {

@@ -22,9 +22,9 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private JMenu Menus[] = new JMenu[Menunames.length];
     private JMenuBar menuBar;
     JRadioButtonMenuItem[] settingItems = {
-        new JRadioButtonMenuItem("Ball type"),
-        new JRadioButtonMenuItem("BgdImage"),
-        new JRadioButtonMenuItem("Fullscreen")
+            new JRadioButtonMenuItem("Ball type"),
+            new JRadioButtonMenuItem("BgdImage"),
+            new JRadioButtonMenuItem("Fullscreen")
     };
     JMenu setting;
     ButtonGroup gruposetting;
@@ -36,17 +36,14 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private Clock clock;
     private BufferedImage backgroundImage;
 
-    private GraphicsDevice graphicDevice;
-
     public static final int ANCHO = 600;
     public static final int ALTO = 350;
     private boolean isFullScreen = false;
-    public static boolean modo1juego = false;
 
     private Thread maintThread;
 
     public enum ScreenState {
-        STARTSCREEN , ONGAME, PAUSED;
+        STARTSCREEN, ONGAME, PAUSED;
     }
 
     private ScreenState screenState;
@@ -60,23 +57,19 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        screenState = ScreenState.STARTSCREEN;
-        bar = new ScrollBar();
-        scores = new Score();
         try {
             backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        screenState = ScreenState.STARTSCREEN;
         maintThread = new Thread(this);
         maintThread.start();
         maintThread.setPriority(1);
     }
 
-    public void initComponents(){
-        menuBar= new JMenuBar();
+    public void initComponents() {
+        menuBar = new JMenuBar();
         setting = new JMenu("Settings");
         setJMenuBar(menuBar);
         for (int i = 0; i < Menunames.length; i++) {
@@ -161,11 +154,11 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     public void keyReleased(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if(screenState == ScreenState.ONGAME){
+            if (screenState == ScreenState.ONGAME) {
                 screenState = ScreenState.PAUSED;
                 audio.stop();
                 maintThread.suspend();
-            }else{
+            } else {
                 audio.start();
                 maintThread.resume();
                 screenState = ScreenState.ONGAME;
@@ -183,16 +176,16 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
         switch (tecla) {
             case KeyEvent.VK_UP:
-                bar.setTeclas(ScrollBar.ARRIBA, bvalor);
+                bar.setKeys(ScrollBar.UP, bvalor);
                 break;
             case KeyEvent.VK_DOWN:
-                bar.setTeclas(ScrollBar.ABAJO, bvalor);
+                bar.setKeys(ScrollBar.DOWN, bvalor);
                 break;
             case KeyEvent.VK_END:
-                bar.setTeclas(ScrollBar.ABAJO2, bvalor);
+                //bar.setTeclas(ScrollBar.DOWN2, bvalor);
                 break;
             case KeyEvent.VK_HOME:
-                bar.setTeclas(ScrollBar.ARRIBA2, bvalor);
+                //bar.setTeclas(ScrollBar.UP2, bvalor);
                 break;
             case KeyEvent.VK_ENTER:
 
@@ -217,13 +210,15 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         isFullScreen = !isFullScreen;
     }
 
-    public void start(){
+    public void start() {
         if (screenState == ScreenState.STARTSCREEN) {
             screenState = ScreenState.ONGAME;
-            if(null == this.ball){
-                this.ball = new Ball(Resource.Image.BASEBALL_BALL);
+            if (null == this.ball) {
+                this.ball = new Ball(Resource.Image.BASEBALL_BALL, 50, 50, 1, 1);
             }
-            clock= new Clock();
+            clock = new Clock();
+            scores = new Score();
+            bar = new ScrollBar(20, 50, 1.70);
             clock.start();
             audio = new Audio();
             audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);
@@ -232,19 +227,13 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
     public void restart() {
         screenState = ScreenState.STARTSCREEN;
-        modo1juego = false;
         Score.puntosjugador1 = 0;
         Score.puntosjugador2 = 0;
         Clock.segundos = 0;
         Clock.minuto = 0;
-        Ball.flagball = true;
-        Ball.x = 64;
-        Ball.y = 150;
-        ScrollBar.desplaza = 25.0;
-        ScrollBar.desplaza2 = 25.0;
     }
 
-    public void draw(Graphics g ){
+    public void draw(Graphics g) {
         if (screenState == ScreenState.ONGAME) {
             Graphics2D g2 = (Graphics2D) g;
             Image mImage = createImage(getWidth(), getHeight());

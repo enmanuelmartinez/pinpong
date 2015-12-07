@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /*--------------------------------------------------
  *
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
@@ -27,6 +29,9 @@ public class Clock extends Thread {
             } catch (Exception es) {
             }
         }
+    }
+
+    public void draw(final Graphics2D g2) {
     }
 
 }

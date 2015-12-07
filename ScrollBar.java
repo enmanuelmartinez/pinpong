@@ -11,84 +11,77 @@ import javax.imageio.ImageIO;
 
 public class ScrollBar {
 
-    Main main1;
     public static final int UP = 0;
     public static final int DOWN = 1;
     public static final int UP2 = 2;
     public static final int DOWN2 = 3;
 
-    private boolean Teclas[] = new boolean[4];
-    private double min_y_cordenate = 0;
-    private double max_y_cordenate = 230;
-
-    private double displacement = 25.0;
-    private double displacement2 = 25.0;
+    private boolean keys[] = new boolean[2];
+    private int minY = 0;
+    private int maxY = 230;
+    private int x;
+    private int y;
     private double dy = 1;
-    private double dy2 = 1;
-    private int posX;
-    private final String dir = Resource.getRootPath() + "resources/images" + File.separator;//direccion de las imagenes
-    private final String rutaImagen[] = {dir + "paleta1.gif", dir + "paleta2.gif"};//barra uno y dos
-    private BufferedImage barImage;
+    private double yIncrement;
+    private final String dir = Resource.getRootPath() + "resources/images" + File.separator;
+    private final String rutaImagen[] = {dir + "paleta1.gif", dir + "paleta2.gif"};
+    private BufferedImage image;
 
 
-    public ScrollBar() {
+    public ScrollBar(int x, int y, double yIncrement) {
         try {
-            barImage = ImageIO.read(new File(Resource.Image.TRUNK_BAR));
+            image = ImageIO.read(new File(Resource.Image.TRUNK_BAR));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.x = x;
+        this.y = y;
+        this.yIncrement = yIncrement;
     }
 
-    //Este metodo es el que registra cuales teclas fueron pulsadas en KeyListener
-    public void setTeclas(int nTecla, boolean bvalor) {
-        if (nTecla >= 0 && nTecla <= 3) {
-            Teclas[nTecla] = bvalor;
+    public void setx(int x) {
+        this.x = x;
+    }
+
+    public int getx() {
+        return x;
+    }
+
+    public void setMinY(int minY) {
+        this.minY = minY;
+    }
+
+    public void setKeys(int nKey, boolean bvalor) {
+        if (nKey >= 0 && nKey <= 3) {
+            keys[nKey] = bvalor;
         }
     }
 
-    public double limitevertical(double posi_y) {
-
-        if (posi_y <= -10) {
-            return min_y_cordenate;
+    public double limitVertical(double dy) {
+        if (dy <= -10) {
+            return minY;
         }
-        if (posi_y >= max_y_cordenate) {
-            return max_y_cordenate;
+        if (dy >= maxY) {
+            return maxY;
         }
-        return posi_y;
+        return dy;
     }
 
     public void run() {
 
-        final double incremento = 1.70;
+        if (keys[UP]) {
+            dy -= yIncrement;
+        } else if (keys[DOWN]) {
+            dy += yIncrement;
+        }
 
-        if (Teclas[UP]) {//UP del primer player
-            dy -= incremento;
-            displacement = dy;
+        if (keys[UP] || keys[DOWN]) {
+            dy = limitVertical(dy);
         }
-        if (Teclas[DOWN]) {//DOWN del primer player
-            dy += incremento;
-            displacement = dy;
-        }
-        if (Teclas[DOWN2]) {//UP del segundo player
-            dy2 += incremento;
-            displacement2 = dy2;
-        }
-        if (Teclas[UP2]) {//DOWN del segundo player
-            dy2 -= incremento;
-            displacement2 = dy2;
-        }
-        //esta parte aqui es para saber cual jugador pulso
-        if (Teclas[UP] || Teclas[DOWN]) {
-            displacement = limitevertical(displacement);
-        }
-        if (Teclas[UP2] || Teclas[DOWN2]) {
-            displacement2 = limitevertical(displacement2);
-        }
+        y = (int) Math.round(dy);
     }
 
     public void draw(Graphics2D g2) {
-        g2.drawImage(this.barImage, 20, (int) Math.round(displacement), null);
-        g2.drawImage(this.barImage, main1.ANCHO - 60, (int) Math.round(displacement2), null);
-
+        g2.drawImage(image, x, y, null);
     }
 }
