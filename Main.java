@@ -1,7 +1,18 @@
-import java.awt.*;
+
+import java.awt.Graphics2D;
+import java.awt.Graphics;
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import java.awt.event.KeyListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 import java.awt.Image;
@@ -9,10 +20,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /*
- * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- * DATE     JUNIO 2009
- * DERECHOS RESERVADOS
+ * @author  ENMANUEL MARTINEZ GONZALEZ, ITT
 */
+
 public class Main extends JFrame implements ActionListener, Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;

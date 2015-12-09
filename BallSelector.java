@@ -1,11 +1,4 @@
 
-/*
- *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *  DATE     JULIO 2009
- *  UPDATED   NOVEMBER 2015
- *  DERECHOS RESERVADOS
- */
-
 import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -16,6 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/*
+ *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
+ */
 
 public class BallSelector extends JDialog implements ActionListener {
 

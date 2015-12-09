@@ -1,11 +1,15 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+
+import java.awt.Graphics;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *  DATE     JULIO 2009
- *  DERECHOS RESERVADOS*/
+*/
 
 public class BackgroundSelector extends JDialog implements ActionListener {
 

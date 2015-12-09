@@ -1,12 +1,9 @@
 
+import java.awt.Graphics2D;
 
 /*
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
-   DATE  29 JUNIO 2009
- * DERECHOS RESERVADOS
 */
-
-import java.awt.Graphics2D;
 
 public class Clock extends Thread {
 

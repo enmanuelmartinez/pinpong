@@ -1,3 +1,4 @@
+
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.MidiSystem;
@@ -7,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *         DATE JULIO 2009
- *         DERECHOS RESERVADOS
+ * @author ENMANUEL MARTINEZ GONZALEZ, ITT
  **/
 
 public class Audio {

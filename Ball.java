@@ -1,18 +1,14 @@
+
 import java.awt.Graphics2D;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 
 /*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *  DATE     JUNIO 2009
- *  DERECHOS RESERVADOS
 */
 
-public class Ball extends JComponent {
-
-    private BufferedImage image;
+public class Ball {
 
     final int diameter = 35;
     final static int ANCHO = 600;
@@ -21,11 +17,9 @@ public class Ball extends JComponent {
     private int y;
     private int vx;
     private int vy;
-    int deltaTime, aun = 0;
+    int deltaTime;
 
-    public static final String rutabolas[] = {
-        Resource.Image.BASEBALL_BALL
-    };
+    private BufferedImage image;
 
     public Ball(String ballImageResource, int x, int y, int vx, int vy) {
 

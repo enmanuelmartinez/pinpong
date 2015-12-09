@@ -1,10 +1,10 @@
-import java.io.*;
-/*--------------------------------------------------
- *
+
+import java.io.File;
+
+/*
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *  DATE     JULIO 2009
- *  DERECHOS RESERVADOS
- -------------------------------------------------*/
+*/
+
 public final class Resource
 {
     public static String getRootPath()

@@ -1,3 +1,4 @@
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -5,16 +6,12 @@ import javax.imageio.ImageIO;
 
 /*-
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
- *  DATE     JUNIO 2009
- *  DERECHOS RESERVADOS
 */
 
 public class ScrollBar {
 
     public static final int UP = 0;
     public static final int DOWN = 1;
-    public static final int UP2 = 2;
-    public static final int DOWN2 = 3;
 
     private boolean keys[] = new boolean[2];
     private int minY = 0;
@@ -23,8 +20,7 @@ public class ScrollBar {
     private int y;
     private double dy = 1;
     private double yIncrement;
-    private final String dir = Resource.getRootPath() + "resources/images" + File.separator;
-    private final String rutaImagen[] = {dir + "paleta1.gif", dir + "paleta2.gif"};
+
     private BufferedImage image;
 
 

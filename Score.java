@@ -2,14 +2,9 @@
 import java.awt.Graphics2D;
 import java.awt.Color;
 
-
-/*-------------------------------------------------
-*
-* @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
-* DATE     JUNIO 2009
-* DERECHOS RESERVADOS
---------------------------------------------------*/
-//clase que maneja los puntajes de los jugadores
+/*
+* @author  ENMANUEL MARTINEZ GONZALEZ, ITT
+*/
 
 public class Score {
     private int points1 = 0;
