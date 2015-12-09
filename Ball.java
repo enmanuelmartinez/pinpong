@@ -12,10 +12,6 @@ import javax.swing.*;
 
 public class Ball extends JComponent {
 
-    private BallSelector ge;
-    private Score puntajes;
-    private ScrollBar bar;
-
     private BufferedImage image;
 
     final int diameter = 35;
@@ -26,7 +22,6 @@ public class Ball extends JComponent {
     private int vx;
     private int vy;
     int deltaTime, aun = 0;
-    static int chosebola = 0;
 
     public static final String rutabolas[] = {
         Resource.Image.BASEBALL_BALL
@@ -74,11 +69,11 @@ public class Ball extends JComponent {
             delta_t = aun;
         }// si pega tabla2*/
         if (vx < 0 && x <= -diameter - 14) {
-            puntajes.puntosjugador2 ++;
+            Score.getInstance().incrementPoints(2);
             bolaposi();
         }// si se le anota a player1
         if (vx > 0 && x >= ANCHO + diameter) {
-            puntajes.puntosjugador1++;
+            Score.getInstance().incrementPoints(1);
             bolaposi();
         }
 

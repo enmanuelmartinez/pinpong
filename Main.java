@@ -133,8 +133,8 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             case 3:
                 if (screenState == ScreenState.STARTSCREEN) {
                     menuBar.setVisible(false);
-                    menuBar.setBorderPainted(false);
-                    menuBar.setDoubleBuffered(false);
+                   // menuBar.setBorderPainted(false);
+                    //menuBar.setDoubleBuffered(false);
                     System.out.println("has iniciado el juego");
                 }
                 break;
@@ -216,35 +216,32 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             if (null == this.ball) {
                 this.ball = new Ball(Resource.Image.BASEBALL_BALL, 50, 50, 1, 1);
             }
-            clock = Clock.getInstance();
-            scores = new Score();
+            clock = new Clock();
+            scores = Score.getInstance();
             bar = new ScrollBar(20, 50, 1.70);
             clock.start();
             audio = new Audio();
-            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI);
+            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI, 50);
         }
     }
 
     public void restart() {
         screenState = ScreenState.STARTSCREEN;
-        Score.puntosjugador1 = 0;
-        Score.puntosjugador2 = 0;
         clock.reset();
     }
 
     public void draw(Graphics g) {
-        if (screenState == ScreenState.ONGAME) {
-            Graphics2D g2 = (Graphics2D) g;
-            Image mImage = createImage(getWidth(), getHeight());
-            Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
-            g2dDouble.drawImage(backgroundImage, 0, 0, null);
+        Graphics2D g2 = (Graphics2D) g;
+        Image mImage = createImage(getWidth(), getHeight());
+        Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
+        g2dDouble.drawImage(backgroundImage, 0, 0, null);
 
+        if (screenState == ScreenState.ONGAME) {
             ball.draw(g2dDouble);
             bar.draw(g2dDouble);
             scores.dibujar(g2dDouble);
-
-            g2.drawImage(mImage, 0, 20, this);
         }
+        g2.drawImage(mImage, 0, 20, null);
     }
 
     public void run() {

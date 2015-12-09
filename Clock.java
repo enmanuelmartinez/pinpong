@@ -14,18 +14,9 @@ public class Clock extends Thread {
     private int minutes;
     public static String time = "";
 
-    private static Clock instance;
-
-    protected Clock() {
+    public Clock() {
         seconds = 0;
         minutes = 0;
-    }
-
-    public static Clock getInstance(){
-        if(null == instance){
-            instance = new Clock();
-        }
-        return instance;
     }
 
     public void setSeconds(int seconds){

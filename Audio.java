@@ -20,14 +20,14 @@ public class Audio {
 
     }
 
-    public void reproduce(String direccion) {
+    public void reproduce(String direccion, int loopCount) {
         try {
             File audioFile = new File(direccion);
             Sequence sequence = MidiSystem.getSequence(audioFile);
             secuencer = MidiSystem.getSequencer();
             secuencer.open();
             secuencer.setSequence(sequence);
-            secuencer.setLoopCount(50);
+            secuencer.setLoopCount(loopCount);
             secuencer.start();
         } catch (MidiUnavailableException ecc) {
         } catch (InvalidMidiDataException ecc2) {
