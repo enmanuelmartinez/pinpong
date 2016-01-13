@@ -15,18 +15,22 @@ public class ScrollBar {
 
     private boolean keys[] = new boolean[2];
     private int minY = 0;
-    private int maxY = 230;
+    private int maxY = 350;
     private int x;
     private int y;
     private double dy = 1;
     private double yIncrement;
+    private int width;
+    private int height;
 
     private BufferedImage image;
 
 
     public ScrollBar(int x, int y, double yIncrement) {
         try {
-            image = ImageIO.read(new File(Resource.Image.TRUNK_BAR));
+            image = ImageIO.read(new File(Resource.Image.V_BAR));
+            width = image.getWidth();
+            height = image.getHeight();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,13 +38,24 @@ public class ScrollBar {
         this.y = y;
         this.yIncrement = yIncrement;
     }
+    public int getHeight(){
+        return this.height;
+    }
 
-    public void setx(int x) {
+    public int getWidth(){
+        return this.width;
+    }
+
+    public void setX(int x) {
         this.x = x;
     }
 
-    public int getx() {
+    public int getX() {
         return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setMinY(int minY) {
