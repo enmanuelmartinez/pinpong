@@ -46,12 +46,12 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private Clock clock;
     private BufferedImage backgroundImage;
 
-    public static final int ANCHO = 600;
-    public static final int ALTO = 350;
+    public static final int ANCHO = 1024;
+    public static final int ALTO = 500;
     private boolean isFullScreen = false;
 
     private Thread maintThread;
-
+    private int runners = 0;
     public enum ScreenState {
         STARTSCREEN, ONGAME, PAUSED;
     }
@@ -224,14 +224,14 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         if (screenState == ScreenState.STARTSCREEN) {
             screenState = ScreenState.ONGAME;
             if (null == this.ball) {
-                this.ball = new Ball(Resource.Image.BASEBALL_BALL, 50, 50, 1, 1);
+                this.ball = new Ball(Resource.Image.MUSHROOM_BALL, 50, 50, 1, 1, this.getSize());
             }
             clock = new Clock();
             scores = Score.getInstance();
             bar = new ScrollBar(20, 50, 1.70);
             clock.start();
             audio = new Audio();
-            audio.reproduce(Resource.Media.SONG_ZELDAOVERWORLD_MIDI, 50);
+            audio.reproduce(Resource.Media.SONG_SUPERMARIOWORLD_OVERWORLD_MIDI, 50);
         }
     }
 
@@ -254,12 +254,34 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         g2.drawImage(mImage, 0, 20, null);
     }
 
+    private void detectCollision(){
+
+        System.out.println("---------------------"+this.runners+"------------------------------");
+        System.out.println("bar W" + bar.getWidth());
+        System.out.println("bar H" + bar.getHeight());
+        System.out.println("bar x" + bar.getX());
+        System.out.println("bar y" + bar.getY());
+
+        System.out.println("Ball x" + ball.getX());
+        System.out.println("Ball y" + ball.getY());
+        this.runners +=1;
+
+        if ((ball.getVx() < 0 && ball.getX() >= bar.getX() && ball.getX() <= bar.getWidth()) && (ball.getY() >= bar.getY()
+                && ball.getY() <= (bar.getY() + bar.getHeight()  + ball.getDiameter()-5))) {
+            ball.setVx(-ball.getVx());
+            //vx = -vx;
+            //aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
+            //delta_t = aun;
+        }// si pega tabla uno*/
+    }
+
     public void run() {
         while (true) {
             try {
                 Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
                 ball.run();
                 bar.run();
+                detectCollision();
                 draw(this.getGraphics());
             } catch (Exception e) {
             }
