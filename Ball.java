@@ -1,5 +1,5 @@
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -10,30 +10,69 @@ import javax.imageio.ImageIO;
 
 public class Ball {
 
-    final int diameter = 35;
-    final static int ANCHO = 600;
-    final static int ALTO = 350;
+    private int diameter = 35;
     private int x;
     private int y;
     private int vx;
     private int vy;
     int deltaTime;
 
+    private Dimension screenSize;
+
     private BufferedImage image;
 
-    public Ball(String ballImageResource, int x, int y, int vx, int vy) {
+    public Ball(String ballImageResource, int x, int y, int vx, int vy, Dimension screenSize) {
 
         deltaTime = 10;
         this.x = x;
         this.y= y;
         this.vx = vx;
         this.vy = vy;
+        this.screenSize = screenSize;
         try {
             this.image = ImageIO.read(new File(ballImageResource));
+            this.diameter = this.image.getHeight();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void setVx(int vx){
+        this.vx = vx;
+    }
+
+    public int getDiameter(){
+        return this.diameter;
+    }
+
+    public int getVx(){
+        return this.vx;
+    }
+
+    public void setVy(int vy){
+        this.vy = vy;
+    }
+
+    public int getVy(){
+        return this.vy;
+    }
+
+    public void setX(int x){
+        this.x = x;
+    }
+
+    public int getX(){
+        return this.x;
+    }
+
+    public void setY(int y){
+        this.y = y;
+    }
+
+    public int getY(){
+        return this.y;
     }
 
     public void run(){
@@ -48,7 +87,7 @@ public class Ball {
         x += vx * delta_t;
         y += vy * delta_t;
 
-        if (vy < 0 && y <= 10 || vy > 0 && y + diameter >= ALTO) {//rebote vertical
+        if (vy < 0 && y <= 10 || vy > 0 && y + diameter >= this.screenSize.height) {//rebote vertical
             vy = -vy;
         }
 
@@ -66,7 +105,7 @@ public class Ball {
             Score.getInstance().incrementPoints(2);
             bolaposi();
         }// si se le anota a player1
-        if (vx > 0 && x >= ANCHO + diameter) {
+        if (vx > 0 && x >= this.screenSize.width + diameter) {
             Score.getInstance().incrementPoints(1);
             bolaposi();
         }
@@ -79,9 +118,9 @@ public class Ball {
             Thread.sleep(1200);
         } catch (final Exception s) {
         }
-        x = (ANCHO / 2);
-        y = (ALTO / 2) + aleat() + 10 - aleat() % 2;
-        deltaTime = 4;
+        x = (this.screenSize.width / 2);
+        y = (this.screenSize.height/ 2) + aleat() + 10 - aleat() % 2;
+        //deltaTime = 4;
         if (aleat() % 2 == 0) {
             vx = -vx;
         } else {
