@@ -42,6 +42,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     private Audio audio;
     private Ball ball = null;
     private ScrollBar bar;
+    private ScrollBar bar2;
     private Score scores;
     private Clock clock;
     private BufferedImage backgroundImage;
@@ -143,8 +144,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             case 3:
                 if (screenState == ScreenState.STARTSCREEN) {
                     menuBar.setVisible(false);
-                   // menuBar.setBorderPainted(false);
-                    //menuBar.setDoubleBuffered(false);
                     System.out.println("has iniciado el juego");
                 }
                 break;
@@ -192,10 +191,10 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 bar.setKeys(ScrollBar.DOWN, bvalor);
                 break;
             case KeyEvent.VK_END:
-                //bar.setTeclas(ScrollBar.DOWN2, bvalor);
+                bar2.setKeys(ScrollBar.DOWN, bvalor);
                 break;
             case KeyEvent.VK_HOME:
-                //bar.setTeclas(ScrollBar.UP2, bvalor);
+                bar2.setKeys(ScrollBar.UP, bvalor);
                 break;
             case KeyEvent.VK_ENTER:
 
@@ -228,7 +227,8 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             }
             clock = new Clock();
             scores = Score.getInstance();
-            bar = new ScrollBar(20, 50, 1.70);
+            bar = new ScrollBar(10, 50, 1.70);
+            bar2 = new ScrollBar(this.ANCHO - 60, 50, 1.70);
             clock.start();
             audio = new Audio();
             audio.reproduce(Resource.Media.SONG_SUPERMARIOWORLD_OVERWORLD_MIDI, 50);
@@ -247,15 +247,16 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         g2dDouble.drawImage(backgroundImage, 0, 0, null);
 
         if (screenState == ScreenState.ONGAME) {
+            clock.draw(g2dDouble);
             ball.draw(g2dDouble);
             bar.draw(g2dDouble);
-            scores.dibujar(g2dDouble);
+            bar2.draw(g2dDouble);
+            scores.draw(g2dDouble);
         }
         g2.drawImage(mImage, 0, 20, null);
     }
 
     private void detectCollision(){
-
         System.out.println("---------------------"+this.runners+"------------------------------");
         System.out.println("bar W" + bar.getWidth());
         System.out.println("bar H" + bar.getHeight());
@@ -264,15 +265,17 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
         System.out.println("Ball x" + ball.getX());
         System.out.println("Ball y" + ball.getY());
-        this.runners +=1;
+        this.runners += 1;
 
         if ((ball.getVx() < 0 && ball.getX() >= bar.getX() && ball.getX() <= bar.getWidth()) && (ball.getY() >= bar.getY()
                 && ball.getY() <= (bar.getY() + bar.getHeight()  + ball.getDiameter()-5))) {
             ball.setVx(-ball.getVx());
-            //vx = -vx;
-            //aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
-            //delta_t = aun;
-        }// si pega tabla uno*/
+
+        }
+
+        if ((ball.getVx()> 0 && ball.getX()>= ANCHO - bar2.getWidth() && ball.getX() <= ANCHO - 80) && (ball.getY()  >= bar2.getY() - 25 && ball.getY() <= bar2.getY())) {
+            ball.setVx(-ball.getVx());
+        }
     }
 
     public void run() {
@@ -281,6 +284,7 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
                 ball.run();
                 bar.run();
+                bar2.run();
                 detectCollision();
                 draw(this.getGraphics());
             } catch (Exception e) {
