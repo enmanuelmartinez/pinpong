@@ -1,5 +1,6 @@
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -91,16 +92,6 @@ public class Ball {
             vy = -vy;
         }
 
-        /*if ((vx < 0 && x >= 5 && x <= 50) && (y >= bar.desplaza - 25 && y <= 100 + bar.desplaza)) {
-            vx = -vx;
-            aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
-            delta_t = aun;
-        }// si pega tabla uno*/
-        /*if ((vx > 0 && x >= ANCHO - 100 && x <= ANCHO - 80) && (y >= bar.desplaza2 - 25 && y <= 100 + bar.desplaza2)) {
-            vx = -vx;
-            aun += 5;//esto me da la posibilidad de aumentar velocidad cada vez que se pegue a la bola
-            delta_t = aun;
-        }// si pega tabla2*/
         if (vx < 0 && x <= -diameter - 14) {
             Score.getInstance().incrementPoints(2);
             bolaposi();
@@ -120,7 +111,7 @@ public class Ball {
         }
         x = (this.screenSize.width / 2);
         y = (this.screenSize.height/ 2) + aleat() + 10 - aleat() % 2;
-        //deltaTime = 4;
+
         if (aleat() % 2 == 0) {
             vx = -vx;
         } else {
