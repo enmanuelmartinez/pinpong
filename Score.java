@@ -1,5 +1,7 @@
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Font;
 import java.awt.Color;
 
 /*
@@ -35,16 +37,16 @@ public class Score {
         points2 = 0;
     }
 
-    public void dibujar(Graphics2D g2) {
+    public void draw(Graphics2D g2) {
         //pinta puntaje jugador uno en la parte inferior izquierda
+        Font myFont = new Font ("Courier New", Font.BOLD, 40);
+        g2.setFont(myFont);
         g2.setColor(Color.red);
-        g2.drawString("JUGADOR#2=" + points2 + "", Main.ANCHO - 114, Main.ALTO - 12);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.drawString("JUGADOR#2=" + points2 + "", Main.ANCHO - 350, Main.ALTO - 10);
         // //pinta puntaje jugador dos en la parte inferior derecha
-        g2.setColor(Color.ORANGE);
-        g2.drawString("JUGADOR#1=" + points1 + "", 12, Main.ALTO - 12);
-        // //pinta tiempo en la parte superior de pantalla pero en el centro de esta
-        g2.drawString(Clock.time, Main.ANCHO / 2, 20);
-
+        g2.setColor(Color.WHITE);
+        g2.drawString("JUGADOR#1=" + points1 + "", 12, Main.ALTO - 10);
     }
 
 }
