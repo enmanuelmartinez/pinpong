@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
 */
 
-public class ScrollBar {
+public class ScrollBar  extends Node{
 
     public static final int UP = 0;
     public static final int DOWN = 1;
@@ -78,7 +78,7 @@ public class ScrollBar {
         return dy;
     }
 
-    public void run() {
+    public void update() {
 
         if (keys[UP]) {
             dy -= yIncrement;

@@ -35,6 +35,8 @@ public final class Resource
         public static final String BASEBALL_BALL = IMAGES_ROOT + "balls" + File.separator + "baseball_ball.png";
         public static final String MUSHROOM_BALL = IMAGES_ROOT + "balls" + File.separator + "mushroom.png";
         public static final String BACKGROUND_MARIO = IMAGES_ROOT + "backgrounds" + File.separator + "mario.jpg";
+        public static final String BACKGROUND_START = IMAGES_ROOT + "backgrounds" + File.separator + "inicio.jpg";
+        public static final String BACKGROUND_ENTER = IMAGES_ROOT + "backgrounds" + File.separator + "enter_start_screen.png";
         public static final String TRUNK_BAR = IMAGES_ROOT + "trunk.png";
         public static final String V_BAR = IMAGES_ROOT + "bar.png";
     }

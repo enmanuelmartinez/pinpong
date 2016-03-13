@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
  *  @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
 */
 
-public class Ball {
+public class Ball extends Node{
 
     private int diameter = 35;
     private int x;
@@ -76,7 +76,7 @@ public class Ball {
         return this.y;
     }
 
-    public void run(){
+    public void update(){
         move(deltaTime);
     }
 

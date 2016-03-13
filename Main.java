@@ -2,16 +2,8 @@
 import java.awt.Graphics2D;
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JMenuBar;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.awt.event.KeyListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
@@ -20,24 +12,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /*
- * @author  ENMANUEL MARTINEZ GONZALEZ, ITT
+ * @author  ENMANUEL MARTINEZ GONZALEZ, ITT 2015-2016
 */
 
-public class Main extends JFrame implements ActionListener, Runnable, KeyListener {
+public class Main extends JFrame implements Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
-    private String Itemnames[] = {"Start", "Recor", "Records", "Exit"};
-    private String Menunames[] = {"MAIN", "CREDITS", "HELP"};
-    private JMenuItem MenuItems[] = new JMenuItem[Itemnames.length];
-    private JMenu Menus[] = new JMenu[Menunames.length];
-    private JMenuBar menuBar;
-    JRadioButtonMenuItem[] settingItems = {
-            new JRadioButtonMenuItem("Ball type"),
-            new JRadioButtonMenuItem("BgdImage"),
-            new JRadioButtonMenuItem("Fullscreen")
-    };
-    JMenu setting;
-    ButtonGroup gruposetting;
 
     private Audio audio;
     private Ball ball = null;
@@ -53,107 +33,30 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
 
     private Thread maintThread;
     private int runners = 0;
+    private ScreenState screenState;
+
     public enum ScreenState {
         STARTSCREEN, ONGAME, PAUSED;
     }
 
-    private ScreenState screenState;
-
     public Main() {
         super("PINPONG GAME");
-        this.initComponents();
         setSize(ANCHO, ALTO + 20); // +20 por el borde de la ventana
         setResizable(false);
-        addKeyListener(this);
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultLookAndFeelDecorated(false);
+        addKeyListener(this);
         try {
-            backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
+            backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_ENTER));
         } catch (Exception e) {
             e.printStackTrace();
         }
         screenState = ScreenState.STARTSCREEN;
         maintThread = new Thread(this);
-        maintThread.start();
         maintThread.setPriority(1);
-    }
-
-    public void initComponents() {
-        menuBar = new JMenuBar();
-        setting = new JMenu("Settings");
-        setJMenuBar(menuBar);
-        for (int i = 0; i < Menunames.length; i++) {
-            Menus[i] = new JMenu(Menunames[i]);
-            menuBar.add(Menus[i]);
-            if (i > 0) {
-                Menus[i].addActionListener(this);
-            }
-        }
-        for (int i = 0; i < Itemnames.length; i++) {
-            MenuItems[i] = new JMenuItem(Itemnames[i]);
-            if (i == 1) {
-                Menus[0].add(setting);
-            } else {
-                Menus[0].add(MenuItems[i]);
-                MenuItems[i].addActionListener(this);
-            }
-        }
-        gruposetting = new ButtonGroup();
-        for (int i = 0; i < 3; i++) {
-            setting.add(settingItems[i]);
-            gruposetting.add(settingItems[i]);
-            settingItems[i].addActionListener(this);
-        }
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        int fuente = 0;
-
-        for (int i = 0; i < 3; i++) {
-            if (e.getSource() == settingItems[i]) {
-                fuente = i;
-                break;
-            }
-        }
-        for (int i = 0; i < MenuItems.length; i++) {
-            if (e.getSource() == MenuItems[i]) {
-                fuente = i + 3;
-                break;
-            }
-        }
-
-        switch (fuente) {
-            case 0:
-                JDialog ballSelectorDialog = new BallSelector();
-                ballSelectorDialog.setModal(true);
-                ballSelectorDialog.setResizable(false);
-                ballSelectorDialog.setLocationRelativeTo(this);
-                ballSelectorDialog.setVisible(true);
-                break;
-            case 1:
-                JDialog backgroundSelector = new BackgroundSelector();
-                backgroundSelector.setModal(true);
-                backgroundSelector.setResizable(false);
-                backgroundSelector.setLocationRelativeTo(this);
-                backgroundSelector.setVisible(true);
-                break;
-            case 2:
-                fullscreen();
-                break;
-            case 3:
-                if (screenState == ScreenState.STARTSCREEN) {
-                    menuBar.setVisible(false);
-                    System.out.println("has iniciado el juego");
-                }
-                break;
-            case 5:
-                break;
-            case 6:
-                this.dispose();
-                System.exit(0);
-                break;
-        }
+        maintThread.start();
     }
 
     public void keyPressed(KeyEvent e) {
@@ -167,10 +70,12 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
                 screenState = ScreenState.PAUSED;
                 audio.stop();
                 maintThread.suspend();
-            } else {
+            } else if (screenState == ScreenState.PAUSED) {
                 audio.start();
                 maintThread.resume();
                 screenState = ScreenState.ONGAME;
+            }else if (screenState == ScreenState.STARTSCREEN) {
+                start();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_R) {
@@ -196,13 +101,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             case KeyEvent.VK_HOME:
                 bar2.setKeys(ScrollBar.UP, bvalor);
                 break;
-            case KeyEvent.VK_ENTER:
-
-                break;
-            case KeyEvent.VK_1:
-                start();
-                break;
-
             case KeyEvent.VK_7:
                 restart();
                 break;
@@ -225,13 +123,18 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             if (null == this.ball) {
                 this.ball = new Ball(Resource.Image.MUSHROOM_BALL, 50, 50, 1, 1, this.getSize());
             }
+            try {
+                backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             clock = new Clock();
             scores = Score.getInstance();
             bar = new ScrollBar(10, 50, 1.70);
             bar2 = new ScrollBar(this.ANCHO - 60, 50, 1.70);
-            clock.start();
             audio = new Audio();
             audio.reproduce(Resource.Media.SONG_SUPERMARIOWORLD_OVERWORLD_MIDI, 50);
+            clock.start();
         }
     }
 
@@ -245,7 +148,6 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         Image mImage = createImage(getWidth(), getHeight());
         Graphics2D g2dDouble = (Graphics2D) mImage.getGraphics();
         g2dDouble.drawImage(backgroundImage, 0, 0, null);
-
         if (screenState == ScreenState.ONGAME) {
             clock.draw(g2dDouble);
             ball.draw(g2dDouble);
@@ -253,11 +155,12 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
             bar2.draw(g2dDouble);
             scores.draw(g2dDouble);
         }
+
         g2.drawImage(mImage, 0, 20, null);
     }
 
-    private void detectCollision(){
-        System.out.println("---------------------"+this.runners+"------------------------------");
+    private void detectCollision() {
+        System.out.println("---------------------" + this.runners + "------------------------------");
         System.out.println("bar W" + bar.getWidth());
         System.out.println("bar H" + bar.getHeight());
         System.out.println("bar x" + bar.getX());
@@ -268,12 +171,12 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
         this.runners += 1;
 
         if ((ball.getVx() < 0 && ball.getX() >= bar.getX() && ball.getX() <= bar.getWidth()) && (ball.getY() >= bar.getY()
-                && ball.getY() <= (bar.getY() + bar.getHeight()  + ball.getDiameter()-5))) {
+                && ball.getY() <= (bar.getY() + bar.getHeight() + ball.getDiameter() - 5))) {
             ball.setVx(-ball.getVx());
 
         }
 
-        if ((ball.getVx()> 0 && ball.getX()>= ANCHO - bar2.getWidth() && ball.getX() <= ANCHO - 80) && (ball.getY()  >= bar2.getY() - 25 && ball.getY() <= bar2.getY())) {
+        if ((ball.getVx() > 0 && ball.getX() >= ANCHO - bar2.getWidth() && ball.getX() <= ANCHO - 80) && (ball.getY() >= bar2.getY() - 25 && ball.getY() <= bar2.getY())) {
             ball.setVx(-ball.getVx());
         }
     }
@@ -281,12 +184,15 @@ public class Main extends JFrame implements ActionListener, Runnable, KeyListene
     public void run() {
         while (true) {
             try {
-                Thread.sleep(10);//varias veces y hace que se cumpla el dobleBuffer
-                ball.run();
-                bar.run();
-                bar2.run();
-                detectCollision();
+                Thread.sleep(8);// Regulardor de frecuencia de refrescado
+                if (screenState == ScreenState.ONGAME) {
+                    ball.update();
+                    bar.update();
+                    bar2.update();
+                    detectCollision();
+                }
                 draw(this.getGraphics());
+
             } catch (Exception e) {
             }
 

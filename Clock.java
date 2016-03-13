@@ -7,17 +7,23 @@ import java.awt.Color;
  * @author  ENMANUEL MARTINEZ GONZALEZ, ITT ,
 */
 
-public class Clock extends Thread {
+public class Clock extends Node implements Runnable {
 
     private int seconds;
     private int minutes;
     private String time = "";
     private Font font;
+    private Thread thread;
 
     public Clock() {
         seconds = 0;
         minutes = 0;
         font = new Font ("Courier New", Font.BOLD, 40);
+        thread = new Thread(this);
+    }
+
+    public  void start(){
+        thread.start();
     }
 
     public void setSeconds(int seconds){
@@ -68,10 +74,14 @@ public class Clock extends Thread {
         }
     }
 
+    @Override
+    public void update() {
+
+    }
+
     public void draw(Graphics2D g2) {
         g2.setColor(Color.ORANGE);
         g2.setFont(font);
         g2.drawString(time, Main.ANCHO / 2, 40);
     }
-
 }
