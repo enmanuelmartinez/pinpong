@@ -118,24 +118,22 @@ public class Main extends JFrame implements Runnable, KeyListener {
     }
 
     public void start() {
-        if (screenState == ScreenState.STARTSCREEN) {
-            screenState = ScreenState.ONGAME;
-            if (null == this.ball) {
-                this.ball = new Ball(Resource.Image.MUSHROOM_BALL, 50, 50, 1, 1, this.getSize());
-            }
-            try {
-                backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            clock = new Clock();
-            scores = Score.getInstance();
-            bar = new ScrollBar(10, 50, 1.70);
-            bar2 = new ScrollBar(this.ANCHO - 60, 50, 1.70);
-            audio = new Audio();
-            audio.reproduce(Resource.Media.SONG_SUPERMARIOWORLD_OVERWORLD_MIDI, 50);
-            clock.start();
+        if (null == this.ball) {
+            this.ball = new Ball(Resource.Image.MUSHROOM_BALL, 50, 50, 1, 1, this.getSize());
         }
+        try {
+            backgroundImage = ImageIO.read(new File(Resource.Image.BACKGROUND_MARIO));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        clock = new Clock();
+        scores = Score.getInstance();
+        bar = new ScrollBar(10, 50, 1.70);
+        bar2 = new ScrollBar(this.ANCHO - 60, 50, 1.70);
+        audio = new Audio();
+        audio.reproduce(Resource.Media.SONG_SUPERMARIOWORLD_OVERWORLD_MIDI, 50);
+        clock.start();
+        screenState = ScreenState.ONGAME;
     }
 
     public void restart() {
